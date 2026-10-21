@@ -1,0 +1,12 @@
+<div class="lang-switch" data-lang-switch>
+  <button class="lang-btn" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="lang-menu"
+          aria-label="{{ ui.lang_label }}: {{ lang_names[lang] }}">
+    {{ icon('languages', 18) }}<span>{{ lang|upper }}</span>{{ icon('chevron', 12) }}
+  </button>
+  <ul class="lang-menu" id="lang-menu" aria-label="{{ ui.lang_label }}">
+    {% for code in langs %}
+    <li><a href="{{ lang_urls[code] }}" hreflang="{{ code }}" lang="{{ code }}"
+           {% if code == lang %}aria-current="true"{% endif %}>{{ lang_names[code] }}<span>{{ code|upper }}</span></a></li>
+    {% endfor %}
+  </ul>
+</div>

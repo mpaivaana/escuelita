@@ -19,16 +19,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body id="top" class="{% block body_class %}{% endblock %}">
   <a class="skip" href="#main">{{ ui.skip }}</a>
   <div class="progress" aria-hidden="true"></div>
   {% block header %}{% include "partials/header.html" %}{% endblock %}
   <main id="main">{% block content %}{% endblock %}</main>
   <footer class="site-footer">
     <div class="wrap footer-inner">
-      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="La Escuelita Ambiental Móvil" width="132" height="44">
+      <img src="{{ url_for('static', filename='img/logo-giz.svg') }}" alt="La Escuelita Ambiental Móvil" width="131" height="52">
       <p>© {{ year }} La Escuelita Ambiental Móvil. {{ ui.footer_rights }}</p>
-      {% include "partials/langs.html" %}
+      <a class="to-top" href="#top" aria-label="{{ ui.back_to_top }}" title="{{ ui.back_to_top }}">{{ icon('arrow', 20) }}</a>
     </div>
   </footer>
   <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>

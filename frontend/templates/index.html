@@ -7,7 +7,7 @@
   <div class="hero-bg" {% if s.hero_image %}style="--hero-bg: url('{{ s.hero_image }}')"{% endif %} data-parallax="0.25"></div>
   <div class="hero-inner">
     <h1 class="hero-logo">
-      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="La Escuelita Ambiental Móvil" width="662" height="221">
+      <img src="{{ url_for('static', filename='img/logo-giz.svg') }}" alt="La Escuelita Ambiental Móvil" width="562" height="223">
     </h1>
     {% if s.tagline %}<p class="hero-tagline">{{ s.tagline }}</p>{% endif %}
   </div>
@@ -30,8 +30,12 @@
 <section id="nosotros" class="section about">
   <div class="wrap">
     <div class="about-intro">
-      <h2 class="reveal" data-reveal>{{ s.about_title }}</h2>
       <p class="lead" data-split>{{ s.about_text }}</p>
+      {# Vídeo institucional: por enquanto um espaço reservado; trocar pelo <video>/<iframe> quando chegar #}
+      <div class="about-video" data-reveal role="img" aria-label="{{ ui.video_soon }}">
+        <span class="about-video-play">{{ icon('play', 30) }}</span>
+        <span class="about-video-label">{{ ui.video_soon }}</span>
+      </div>
     </div>
     {% if c.pillars %}
     <div class="pillars">
@@ -44,6 +48,23 @@
       {% endfor %}
     </div>
     {% endif %}
+  </div>
+</section>
+
+<section id="impacto" class="section impact">
+  <div class="wrap">
+    <ul class="impact-row">
+      <li class="impact-stat" data-reveal>
+        <span class="impact-value" data-counter="{{ s.impact_number }}">{{ s.impact_number }}</span>
+        <span class="impact-text">{{ s.impact_label }}</span>
+      </li>
+      {% for st in c.stats %}
+      <li class="impact-stat" data-reveal style="--d: {{ loop.index * 110 }}ms">
+        <span class="impact-value" data-counter="{{ st.value }}">{{ st.value }}</span>
+        <span class="impact-text">{{ st.label }}</span>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
 </section>
 
@@ -85,26 +106,6 @@
   </div>
 </section>
 
-<section id="impacto" class="section impact">
-  <div class="impact-bg" {% if s.impact_image %}style="--impact-bg: url('{{ s.impact_image }}')"{% endif %} data-parallax="0.15"></div>
-  <div class="wrap">
-    <p class="impact-main">
-      <span class="impact-number" data-counter="{{ s.impact_number }}">{{ s.impact_number }}</span>
-      <span class="impact-label">{{ s.impact_label }}</span>
-    </p>
-    {% if c.stats %}
-    <dl class="stats">
-      {% for st in c.stats %}
-      <div class="stat" data-reveal style="--d: {{ loop.index0 * 120 }}ms">
-        <dt><span class="stat-value" data-counter="{{ st.value }}">{{ st.value }}</span> {{ st.label }}</dt>
-        {% if st.description %}<dd>{{ st.description }}</dd>{% endif %}
-      </div>
-      {% endfor %}
-    </dl>
-    {% endif %}
-  </div>
-</section>
-
 {% if c.team %}
 <section id="equipo" class="section team">
   <div class="wrap">
@@ -133,7 +134,7 @@
 <section id="contacto" class="section contact">
   <div class="wrap contact-inner">
     <div class="contact-info" data-reveal>
-      <h2>{{ s.contact_title }}</h2>
+      <h2>{{ ui.nav_contact }}</h2>
       {% if s.contact_intro %}<p>{{ s.contact_intro }}</p>{% endif %}
       <p class="contact-direct">{{ ui.contact_direct }}</p>
       <ul class="channels">

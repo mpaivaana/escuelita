@@ -221,55 +221,59 @@
   ],
   "team": [
     {
-      "name": "Nombre Apellido",
+      "name": "Fiorella Fernandez Herrera",
+      "photo": "fiorella-fernandez.jpg",
       "role": {
-        "es": "Dirección general",
-        "en": "Executive director",
-        "pt": "Direção geral"
+        "es": "Fundadora y Líder",
+        "en": "Founder and Lead",
+        "pt": "Fundadora e Líder"
       },
       "bio": {
-        "es": "Lidera la estrategia y las alianzas con empresas e instituciones.",
-        "en": "Leads strategy and partnerships with companies and institutions.",
-        "pt": "Lidera a estratégia e as parcerias com empresas e instituições."
+        "es": "Lidera la estrategia, diseño y gestión de las iniciativas de La Escuelita Ambiental Móvil, integrando ciencia, educación e innovación social.",
+        "en": "Leads the strategy, design and management of La Escuelita Ambiental Móvil's initiatives, bringing together science, education and social innovation.",
+        "pt": "Lidera a estratégia, o desenho e a gestão das iniciativas da La Escuelita Ambiental Móvil, integrando ciência, educação e inovação social."
       }
     },
     {
-      "name": "Nombre Apellido",
+      "name": "Pilar Juárez Condori",
+      "photo": "pilar-juarez.jpg",
       "role": {
-        "es": "Coordinación de educación ambiental",
-        "en": "Environmental education lead",
-        "pt": "Coordenação de educação ambiental"
+        "es": "Especialista en Diseño de Programas Educativos",
+        "en": "Educational Program Design Specialist",
+        "pt": "Especialista em Desenho de Programas Educativos"
       },
       "bio": {
-        "es": "Diseña los talleres y materiales para escuelas y familias.",
-        "en": "Designs workshops and materials for schools and families.",
-        "pt": "Cria as oficinas e materiais para escolas e famílias."
+        "es": "Contribuye al diseño metodológico de nuestros talleres, programas y experiencias de aprendizaje.",
+        "en": "Contributes to the methodological design of our workshops, programs and learning experiences.",
+        "pt": "Contribui com o desenho metodológico das nossas oficinas, programas e experiências de aprendizagem."
       }
     },
     {
-      "name": "Nombre Apellido",
+      "name": "Jorge Fernandez",
+      "photo": "jorge-fernandez.jpg",
       "role": {
-        "es": "Sostenibilidad corporativa",
-        "en": "Corporate sustainability",
-        "pt": "Sustentabilidade corporativa"
+        "es": "Asesor Técnico en Innovación",
+        "en": "Technical Advisor in Innovation",
+        "pt": "Assessor Técnico em Inovação"
       },
       "bio": {
-        "es": "Acompaña a las empresas en sus programas ESG y voluntariados.",
-        "en": "Supports companies with their ESG and volunteering programs.",
-        "pt": "Acompanha as empresas em seus programas ESG e de voluntariado."
+        "es": "Brinda asesoramiento técnico para el desarrollo y fortalecimiento de las iniciativas de La Escuelita Ambiental Móvil.",
+        "en": "Provides technical advice for the development and strengthening of La Escuelita Ambiental Móvil's initiatives.",
+        "pt": "Oferece assessoria técnica para o desenvolvimento e o fortalecimento das iniciativas da La Escuelita Ambiental Móvil."
       }
     },
     {
-      "name": "Nombre Apellido",
+      "name": "Enver Espinal Santos",
+      "photo": "enver-espinal.jpg",
       "role": {
-        "es": "Campañas y comunidad",
-        "en": "Campaigns and community",
-        "pt": "Campanhas e comunidade"
+        "es": "Asesor Técnico y de Gestión",
+        "en": "Technical and Management Advisor",
+        "pt": "Assessor Técnico e de Gestão"
       },
       "bio": {
-        "es": "Organiza limpiezas, campañas y el trabajo con vecinos y voluntarios.",
-        "en": "Organises clean-ups, campaigns and work with neighbours and volunteers.",
-        "pt": "Organiza limpezas, campanhas e o trabalho com moradores e voluntários."
+        "es": "Brinda soporte administrativo para el desarrollo de las actividades de La Escuelita Ambiental Móvil.",
+        "en": "Provides administrative support for the development of La Escuelita Ambiental Móvil's activities.",
+        "pt": "Oferece suporte administrativo para o desenvolvimento das atividades da La Escuelita Ambiental Móvil."
       }
     }
   ]

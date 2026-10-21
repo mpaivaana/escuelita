@@ -37,7 +37,7 @@ def seed_content(lang: str) -> dict:
     for m in raw.get("team", []):
         item = _localize(m, lang)
         words = item["name"].split()
-        item.update(photo=None, linkedin="",
+        item.update(photo=f"/static/img/team/{m['photo']}" if m.get("photo") else None, linkedin="",
                     initials="".join(w[0] for w in (words[:1] + words[-1:] if len(words) > 1 else words)).upper())
         team.append(item)
     return {

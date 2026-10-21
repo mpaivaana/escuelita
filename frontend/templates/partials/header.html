@@ -1,7 +1,7 @@
 <header class="site-header {{ header_class|default('') }}">
   <div class="wrap header-inner">
     <a class="brand" href="{{ url_for('home', lang=lang) }}" aria-label="La Escuelita Ambiental Móvil">
-      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" width="120" height="40">
+      <img src="{{ url_for('static', filename='img/logo-giz.svg') }}" alt="" width="121" height="48">
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">
       {{ icon('menu', 24) }}<span class="sr-only">{{ ui.menu }}</span>
@@ -10,13 +10,13 @@
       <ul>
         {% set base = url_for('home', lang=lang) %}
         <li><a href="{{ base }}#nosotros">{{ ui.nav_about }}</a></li>
+        <li><a href="{{ base }}#impacto">{{ ui.nav_impact }}</a></li>
         <li><a href="{{ base }}#proyectos">{{ ui.nav_projects }}</a></li>
         <li><a href="{{ base }}#servicios">{{ ui.nav_services }}</a></li>
-        <li><a href="{{ base }}#impacto">{{ ui.nav_impact }}</a></li>
         <li><a href="{{ base }}#equipo">{{ ui.nav_team }}</a></li>
         <li><a href="{{ base }}#contacto">{{ ui.nav_contact }}</a></li>
       </ul>
-      {% include "partials/langs.html" %}
+      {% include "partials/lang-switch.html" %}
     </nav>
   </div>
 </header>

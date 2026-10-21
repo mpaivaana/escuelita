@@ -16,6 +16,15 @@
     });
   }
 
+  /* Seletor de idioma --------------------------------------------------- */
+  document.querySelectorAll("[data-lang-switch]").forEach((box) => {
+    const btn = box.querySelector(".lang-btn");
+    const setOpen = (open) => { box.classList.toggle("is-open", open); btn.setAttribute("aria-expanded", String(open)); };
+    btn.addEventListener("click", () => setOpen(!box.classList.contains("is-open")));
+    document.addEventListener("click", (e) => { if (!box.contains(e.target)) setOpen(false); });
+    box.addEventListener("keydown", (e) => { if (e.key === "Escape") { setOpen(false); btn.focus(); } });
+  });
+
   /* Texto em palavras (revelação do parágrafo de abertura) ---------------- */
   document.querySelectorAll("[data-split]").forEach((el) => {
     const words = el.textContent.trim().split(/\s+/);

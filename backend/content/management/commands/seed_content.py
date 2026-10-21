@@ -26,15 +26,16 @@ class Command(BaseCommand):
     help = "Carga el contenido inicial del sitio si la base está vacía."
 
     def add_arguments(self, parser):
-        parser.add_argument("--images", help="Carpeta con las imágenes de los proyectos")
+        parser.add_argument("--images", help="Carpeta con las imágenes de proyectos y equipo")
         parser.add_argument("--force", action="store_true", help="Borra y vuelve a cargar todo")
 
     def handle(self, *args, **opts):
         data = json.loads(SEED.read_text(encoding="utf-8"))
+        img_dir = Path(opts["images"]) if opts.get("images") else None
         if SiteSettings.objects.exists() and not opts["force"]:
             # Bases ya pobladas antes de existir la sección de equipo
             if not TeamMember.objects.exists():
-                self.seed_team(data)
+                self.seed_team(data, img_dir)
                 self.stdout.write(self.style.SUCCESS("Sección de equipo cargada."))
             else:
                 self.stdout.write("Ya hay contenido; nada que hacer (usa --force para recargar).")
@@ -45,7 +46,6 @@ class Command(BaseCommand):
         SiteSettings.objects.create(**split(data["site"]))
         for i, item in enumerate(data["pillars"]):
             Pillar.objects.create(order=i, **split(item))
-        img_dir = Path(opts["images"]) if opts.get("images") else None
         for i, item in enumerate(data["projects"]):
             image = item.pop("image", None)
             project = Project(order=i, **split(item))
@@ -57,10 +57,10 @@ class Command(BaseCommand):
             Service.objects.create(order=i, **split(item))
         for i, item in enumerate(data["stats"]):
             ImpactStat.objects.create(order=i, **split(item))
-        self.seed_team(data)
+        self.seed_team(data, img_dir)
         self.stdout.write(self.style.SUCCESS("Contenido inicial cargado en es / en / pt."))
 
-    def seed_team(self, data):
+    def seed_team(self, data, img_dir=None):
         s = SiteSettings.load()
         if s and not s.team_intro_es:
             for key in ("team_title", "team_intro"):
@@ -68,4 +68,9 @@ class Command(BaseCommand):
                     setattr(s, f"{key}_{lang}", text)
             s.save()
         for i, item in enumerate(data.get("team", [])):
-            TeamMember.objects.create(order=i, **split(item))
+            photo = item.pop("photo", None)
+            member = TeamMember(order=i, **split(item))
+            if img_dir and photo and (img_dir / photo).exists():
+                with open(img_dir / photo, "rb") as fh:
+                    member.photo.save(photo, File(fh), save=False)
+            member.save()
