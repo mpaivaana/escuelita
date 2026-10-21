@@ -1,0 +1,19 @@
+/* Deixa o admin com as cores da marca */
+:root, html[data-theme="light"] {
+  --primary: #1f4332;
+  --secondary: #2c5a44;
+  --accent: #e2c48f;
+  --header-color: #f3eee3;
+  --header-link-color: #f3eee3;
+  --link-fg: #2c5a44;
+  --link-hover-color: #1f4332;
+  --button-bg: #2c5a44;
+  --button-hover-bg: #1f4332;
+  --default-button-bg: #1f4332;
+  --selected-row: #eef3e8;
+  --font-family-primary: "Poppins", system-ui, sans-serif;
+}
+#header { background: #262a27; }
+#branding h1, #branding h1 a:link, #branding h1 a:visited { color: #f3eee3; font-weight: 600; }
+.module h2, .module caption { background: #2c5a44; }
+.ui-tabs .ui-tabs-nav li.ui-tabs-active { border-bottom-color: #e2c48f; }

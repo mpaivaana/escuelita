@@ -1,0 +1,36 @@
+{% from "partials/icons.html" import icon %}
+<!doctype html>
+<html lang="{{ lang }}" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}La Escuelita Ambiental Móvil{% endblock %}</title>
+  <meta name="description" content="{{ ui.meta_description }}">
+  <meta name="theme-color" content="#2b2d2c">
+  {% for code in langs %}<link rel="alternate" hreflang="{{ code }}" href="{{ lang_urls[code] }}">
+  {% endfor %}
+  <meta property="og:title" content="La Escuelita Ambiental Móvil">
+  <meta property="og:description" content="{{ ui.meta_description }}">
+  <meta property="og:image" content="{{ url_for('static', filename='img/pizarra.jpg', _external=True) }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+  <script>document.documentElement.classList.replace("no-js","js")</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip" href="#main">{{ ui.skip }}</a>
+  <div class="progress" aria-hidden="true"></div>
+  {% block header %}{% include "partials/header.html" %}{% endblock %}
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="La Escuelita Ambiental Móvil" width="132" height="44">
+      <p>© {{ year }} Moray-Tech Solutions S.A.C. {{ ui.footer_rights }}</p>
+      {% include "partials/langs.html" %}
+    </div>
+  </footer>
+  <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
+</body>
+</html>

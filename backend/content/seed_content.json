@@ -1,0 +1,276 @@
+{
+  "site": {
+    "tagline": "by Moray-Tech Solutions S.A.C",
+    "impact_number": "+1000",
+    "whatsapp": "+51 999 999 999",
+    "email": "hola@laescuelitaambiental.pe",
+    "instagram": "laescuelitaambiental",
+    "about_title": {
+      "es": "¿Quiénes somos?",
+      "en": "Who we are",
+      "pt": "Quem somos"
+    },
+    "about_text": {
+      "es": "Somos La Escuelita Ambiental Móvil, un proyecto de innovación social que impulsa la educación y la participación para construir un futuro sostenible. Junto a empresas y comunidades, transformamos la sostenibilidad en acciones concretas a través de tres pilares: sostenibilidad corporativa, educación y campañas ambientales. Nuestro objetivo es involucrar a las personas y generar un impacto positivo y real en cada territorio.",
+      "en": "We are La Escuelita Ambiental Móvil, a social innovation project that promotes education and participation to build a sustainable future. Together with companies and communities, we turn sustainability into concrete action through three pillars: corporate sustainability, education and environmental campaigns. Our goal is to involve people and create a real, positive impact in every territory.",
+      "pt": "Somos La Escuelita Ambiental Móvil, um projeto de inovação social que impulsiona a educação e a participação para construir um futuro sustentável. Junto a empresas e comunidades, transformamos a sustentabilidade em ações concretas por meio de três pilares: sustentabilidade corporativa, educação e campanhas ambientais. Nosso objetivo é envolver as pessoas e gerar um impacto positivo e real em cada território."
+    },
+    "projects_title": {
+      "es": "Proyectos realizados",
+      "en": "Our projects",
+      "pt": "Projetos realizados"
+    },
+    "projects_intro": {
+      "es": "Conoce algunas de las iniciativas que hemos desarrollado junto a instituciones y comunidades.",
+      "en": "A few of the initiatives we have carried out with institutions and communities.",
+      "pt": "Conheça algumas das iniciativas que desenvolvemos junto a instituições e comunidades."
+    },
+    "services_title": {
+      "es": "Soluciones ambientales para cada contexto",
+      "en": "Environmental solutions for every context",
+      "pt": "Soluções ambientais para diferentes contextos"
+    },
+    "services_intro": {
+      "es": "Diseñamos programas a la medida de cada empresa, escuela o comunidad, desde un taller puntual hasta una estrategia completa.",
+      "en": "We design programs tailored to each company, school or community, from a single workshop to a complete strategy.",
+      "pt": "Criamos programas sob medida para cada empresa, escola ou comunidade, de uma oficina pontual a uma estratégia completa."
+    },
+    "impact_label": {
+      "es": "personas impactadas",
+      "en": "people reached",
+      "pt": "pessoas impactadas"
+    },
+    "contact_title": {
+      "es": "Conversemos",
+      "en": "Let's talk",
+      "pt": "Vamos conversar"
+    },
+    "contact_intro": {
+      "es": "Cuéntanos sobre tu empresa, escuela o comunidad y te respondemos en un plazo de dos días hábiles.",
+      "en": "Tell us about your company, school or community and we will reply within two business days.",
+      "pt": "Conte sobre sua empresa, escola ou comunidade e respondemos em até dois dias úteis."
+    },
+    "team_title": {
+      "es": "Nuestro equipo",
+      "en": "Our team",
+      "pt": "Nossa equipe"
+    },
+    "team_intro": {
+      "es": "Educadoras, especialistas en sostenibilidad y gestores comunitarios que llevan la escuelita a cada territorio.",
+      "en": "Educators, sustainability specialists and community organisers who take the escuelita to every territory.",
+      "pt": "Educadoras, especialistas em sustentabilidade e articuladores comunitários que levam a escuelita a cada território."
+    }
+  },
+  "pillars": [
+    {
+      "icon": "hands",
+      "title": {
+        "es": "Misión",
+        "en": "Mission",
+        "pt": "Missão"
+      },
+      "text": {
+        "es": "Promover la conciencia ambiental a través de la educación y la participación ciudadana, transformando la sostenibilidad en acciones concretas que generen un impacto positivo real en las personas y sus territorios.",
+        "en": "To raise environmental awareness through education and civic participation, turning sustainability into concrete actions that create a real, positive impact on people and their territories.",
+        "pt": "Promover a consciência ambiental por meio da educação e da participação cidadã, transformando a sustentabilidade em ações concretas que gerem um impacto positivo real nas pessoas e em seus territórios."
+      }
+    },
+    {
+      "icon": "target",
+      "title": {
+        "es": "Visión",
+        "en": "Vision",
+        "pt": "Visão"
+      },
+      "text": {
+        "es": "Ser el referente de innovación social y sostenibilidad en el Perú, transformando los desafíos ambientales en oportunidades de acción y aprendizaje para construir una sociedad más consciente.",
+        "en": "To be Peru's benchmark for social innovation and sustainability, turning environmental challenges into opportunities for action and learning to build a more conscious society.",
+        "pt": "Ser a referência em inovação social e sustentabilidade no Peru, transformando os desafios ambientais em oportunidades de ação e aprendizado para construir uma sociedade mais consciente."
+      }
+    },
+    {
+      "icon": "globe",
+      "title": {
+        "es": "Valores",
+        "en": "Values",
+        "pt": "Valores"
+      },
+      "text": {
+        "es": "Nos guía el respeto por la diversidad y el entorno, y la innovación para crear soluciones adaptadas a cada realidad. Trabajamos desde la colaboración para generar un impacto positivo y duradero, actuando siempre con absoluta integridad, ética y transparencia.",
+        "en": "We are guided by respect for diversity and the environment, and by innovation that creates solutions adapted to each reality. We work collaboratively to create lasting positive impact, always acting with integrity, ethics and transparency.",
+        "pt": "Somos guiados pelo respeito à diversidade e ao meio ambiente, e pela inovação para criar soluções adaptadas a cada realidade. Trabalhamos de forma colaborativa para gerar um impacto positivo e duradouro, agindo sempre com integridade, ética e transparência."
+      }
+    }
+  ],
+  "projects": [
+    {
+      "image": "guardianes-del-oceano.png",
+      "title": {
+        "es": "Guardianes del Océano",
+        "en": "Ocean Guardians",
+        "pt": "Guardiões do Oceano"
+      },
+      "partner": {
+        "es": "Haciendo Ciencia",
+        "en": "Haciendo Ciencia",
+        "pt": "Haciendo Ciencia"
+      },
+      "summary": {
+        "es": "Programa virtual para que niñas y niños descubran cómo proteger el mar y su biodiversidad.",
+        "en": "A virtual program where children discover how to protect the ocean and its biodiversity.",
+        "pt": "Programa virtual para que crianças descubram como proteger o mar e sua biodiversidade."
+      }
+    },
+    {
+      "image": "heroes-del-ambiente.png",
+      "title": {
+        "es": "Héroes del Ambiente",
+        "en": "Environmental Heroes",
+        "pt": "Heróis do Meio Ambiente"
+      },
+      "partner": {
+        "es": "Fundación Peruana de Cáncer",
+        "en": "Fundación Peruana de Cáncer",
+        "pt": "Fundación Peruana de Cáncer"
+      },
+      "summary": {
+        "es": "Talleres presenciales de educación ambiental con equipos y familias de la fundación.",
+        "en": "In-person environmental education workshops with the foundation's staff and families.",
+        "pt": "Oficinas presenciais de educação ambiental com equipes e famílias da fundação."
+      }
+    }
+  ],
+  "services": [
+    {
+      "title": {
+        "es": "Sostenibilidad corporativa",
+        "en": "Corporate sustainability",
+        "pt": "Sustentabilidade corporativa"
+      },
+      "description": {
+        "es": "Acompañamos a empresas en sus estrategias ESG con voluntariados, diagnósticos y programas para colaboradores.",
+        "en": "We support companies in their ESG strategies with volunteering, assessments and employee programs.",
+        "pt": "Apoiamos empresas em suas estratégias ESG com voluntariado, diagnósticos e programas para colaboradores."
+      }
+    },
+    {
+      "title": {
+        "es": "Educación ambiental",
+        "en": "Environmental education",
+        "pt": "Educação ambiental"
+      },
+      "description": {
+        "es": "Talleres presenciales y virtuales para escuelas, adaptados a cada edad y a cada territorio.",
+        "en": "In-person and online workshops for schools, adapted to each age group and territory.",
+        "pt": "Oficinas presenciais e virtuais para escolas, adaptadas a cada idade e território."
+      }
+    },
+    {
+      "title": {
+        "es": "Campañas ambientales",
+        "en": "Environmental campaigns",
+        "pt": "Campanhas ambientais"
+      },
+      "description": {
+        "es": "Limpiezas de playa, reciclaje y campañas de sensibilización que movilizan a la comunidad.",
+        "en": "Beach clean-ups, recycling drives and awareness campaigns that mobilise the community.",
+        "pt": "Limpezas de praia, reciclagem e campanhas de conscientização que mobilizam a comunidade."
+      }
+    }
+  ],
+  "stats": [
+    {
+      "value": "+10",
+      "label": {
+        "es": "empresas aliadas",
+        "en": "partner companies",
+        "pt": "empresas parceiras"
+      },
+      "description": {
+        "es": "Organizaciones que confían en nosotros para su gestión ambiental.",
+        "en": "Organisations that trust us with their environmental work.",
+        "pt": "Organizações que confiam em nós para sua gestão ambiental."
+      }
+    },
+    {
+      "value": "+10",
+      "label": {
+        "es": "instituciones educativas",
+        "en": "schools",
+        "pt": "instituições de ensino"
+      },
+      "description": {
+        "es": "Escuelas donde llevamos la educación ambiental al aula.",
+        "en": "Schools where we bring environmental education into the classroom.",
+        "pt": "Escolas onde levamos a educação ambiental à sala de aula."
+      }
+    },
+    {
+      "value": "+10",
+      "label": {
+        "es": "campañas realizadas",
+        "en": "campaigns",
+        "pt": "campanhas realizadas"
+      },
+      "description": {
+        "es": "Acciones en playas, parques y barrios de Lima.",
+        "en": "Actions on beaches, parks and neighbourhoods across Lima.",
+        "pt": "Ações em praias, parques e bairros de Lima."
+      }
+    }
+  ],
+  "team": [
+    {
+      "name": "Nombre Apellido",
+      "role": {
+        "es": "Dirección general",
+        "en": "Executive director",
+        "pt": "Direção geral"
+      },
+      "bio": {
+        "es": "Lidera la estrategia y las alianzas con empresas e instituciones.",
+        "en": "Leads strategy and partnerships with companies and institutions.",
+        "pt": "Lidera a estratégia e as parcerias com empresas e instituições."
+      }
+    },
+    {
+      "name": "Nombre Apellido",
+      "role": {
+        "es": "Coordinación de educación ambiental",
+        "en": "Environmental education lead",
+        "pt": "Coordenação de educação ambiental"
+      },
+      "bio": {
+        "es": "Diseña los talleres y materiales para escuelas y familias.",
+        "en": "Designs workshops and materials for schools and families.",
+        "pt": "Cria as oficinas e materiais para escolas e famílias."
+      }
+    },
+    {
+      "name": "Nombre Apellido",
+      "role": {
+        "es": "Sostenibilidad corporativa",
+        "en": "Corporate sustainability",
+        "pt": "Sustentabilidade corporativa"
+      },
+      "bio": {
+        "es": "Acompaña a las empresas en sus programas ESG y voluntariados.",
+        "en": "Supports companies with their ESG and volunteering programs.",
+        "pt": "Acompanha as empresas em seus programas ESG e de voluntariado."
+      }
+    },
+    {
+      "name": "Nombre Apellido",
+      "role": {
+        "es": "Campañas y comunidad",
+        "en": "Campaigns and community",
+        "pt": "Campanhas e comunidade"
+      },
+      "bio": {
+        "es": "Organiza limpiezas, campañas y el trabajo con vecinos y voluntarios.",
+        "en": "Organises clean-ups, campaigns and work with neighbours and volunteers.",
+        "pt": "Organiza limpezas, campanhas e o trabalho com moradores e voluntários."
+      }
+    }
+  ]
+}

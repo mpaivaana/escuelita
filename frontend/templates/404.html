@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section about page-top">
+  <div class="wrap">
+    <h1 class="h2">404</h1>
+    <p><a class="link-arrow" href="{{ url_for('home', lang=lang) }}">{{ ui.back_home }}</a></p>
+  </div>
+</section>
+{% endblock %}

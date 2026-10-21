@@ -1,0 +1,6 @@
+<ul class="langs" aria-label="{{ ui.lang_label }}">
+  {% for code in langs %}
+  <li><a href="{{ lang_urls[code] }}" hreflang="{{ code }}" lang="{{ code }}" title="{{ lang_names[code] }}"
+         {% if code == lang %}aria-current="true"{% endif %}>{{ code|upper }}</a></li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% set s = c.site %}
+{% set header_class = "is-over-hero" %}
+{% block content %}
+
+<section class="hero" data-hero>
+  <div class="hero-bg" {% if s.hero_image %}style="--hero-bg: url('{{ s.hero_image }}')"{% endif %} data-parallax="0.25"></div>
+  <div class="hero-inner">
+    <h1 class="hero-logo">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="La Escuelita Ambiental Móvil" width="662" height="221">
+    </h1>
+    {% if s.tagline %}<p class="hero-tagline">{{ s.tagline }}</p>{% endif %}
+  </div>
+  <a class="scroll-cue" href="#nosotros">
+    <span>{{ ui.scroll_cue }}</span>
+    <svg viewBox="0 0 12 34" width="12" height="34" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+      <path d="M6 1v28M1.5 24.5 6 30l4.5-5.5"/>
+    </svg>
+  </a>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    {% for i in range(2) %}<div class="marquee-group">
+      {% for word in ui.marquee %}<span>{{ word }}</span><span class="marquee-dot">✳</span>{% endfor %}
+    </div>{% endfor %}
+  </div>
+</div>
+
+<section id="nosotros" class="section about">
+  <div class="wrap">
+    <div class="about-intro">
+      <h2 class="reveal" data-reveal>{{ s.about_title }}</h2>
+      <p class="lead" data-split>{{ s.about_text }}</p>
+    </div>
+    {% if c.pillars %}
+    <div class="pillars">
+      {% for p in c.pillars %}
+      <article class="pillar" data-reveal style="--d: {{ loop.index0 * 120 }}ms">
+        <span class="pillar-icon">{{ icon(p.icon, 30) }}</span>
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section id="proyectos" class="section projects-section projects-home">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <h2>{{ s.projects_title }}</h2>
+        {% if s.projects_intro %}<p>{{ s.projects_intro }}</p>{% endif %}
+      </div>
+      <a class="link-arrow" href="{{ url_for('projects', lang=lang, slug=projects_slug) }}">
+        <span>{{ ui.see_all_projects }}</span>{{ icon('arrow', 18) }}
+      </a>
+    </div>
+    <div class="project-grid">
+      {% for p in c.projects if p.featured %}{% if loop.index <= 4 %}{% include "partials/project_card.html" %}{% endif %}
+      {% else %}<p>{{ ui.no_projects }}</p>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="servicios" class="section services">
+  <div class="wrap services-inner">
+    <div class="services-head">
+      <h2 data-reveal>{{ s.services_title }}</h2>
+      {% if s.services_intro %}<p data-reveal style="--d:100ms">{{ s.services_intro }}</p>{% endif %}
+      <a class="btn" href="#contacto" data-reveal style="--d:180ms">
+        <span>{{ ui.services_cta }}</span>{{ icon('arrow', 18) }}
+      </a>
+    </div>
+    <ul class="service-list">
+      {% for sv in c.services %}
+      <li data-reveal style="--d: {{ loop.index0 * 100 }}ms">
+        <span class="service-icon">{{ icon('leaf', 24) }}</span>
+        <div><h3>{{ sv.title }}</h3><p>{{ sv.description }}</p></div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section id="impacto" class="section impact">
+  <div class="impact-bg" {% if s.impact_image %}style="--impact-bg: url('{{ s.impact_image }}')"{% endif %} data-parallax="0.15"></div>
+  <div class="wrap">
+    <p class="impact-main">
+      <span class="impact-number" data-counter="{{ s.impact_number }}">{{ s.impact_number }}</span>
+      <span class="impact-label">{{ s.impact_label }}</span>
+    </p>
+    {% if c.stats %}
+    <dl class="stats">
+      {% for st in c.stats %}
+      <div class="stat" data-reveal style="--d: {{ loop.index0 * 120 }}ms">
+        <dt><span class="stat-value" data-counter="{{ st.value }}">{{ st.value }}</span> {{ st.label }}</dt>
+        {% if st.description %}<dd>{{ st.description }}</dd>{% endif %}
+      </div>
+      {% endfor %}
+    </dl>
+    {% endif %}
+  </div>
+</section>
+
+{% if c.team %}
+<section id="equipo" class="section team">
+  <div class="wrap">
+    <div class="team-head" data-reveal>
+      <h2>{{ s.team_title }}</h2>
+      {% if s.team_intro %}<p>{{ s.team_intro }}</p>{% endif %}
+    </div>
+    <ul class="team-grid">
+      {% for m in c.team %}
+      <li class="member" data-reveal style="--d: {{ loop.index0 * 90 }}ms">
+        <div class="member-photo">
+          {% if m.photo %}<img src="{{ m.photo }}" alt="" loading="lazy">
+          {% else %}<span class="member-initials" aria-hidden="true">{{ m.initials }}</span>{% endif %}
+        </div>
+        <h3>{{ m.name }}</h3>
+        <p class="member-role">{{ m.role }}</p>
+        {% if m.bio %}<p class="member-bio">{{ m.bio }}</p>{% endif %}
+        {% if m.linkedin %}<a class="member-link" href="{{ m.linkedin }}" target="_blank" rel="noopener">{{ icon('linkedin', 20) }}<span class="sr-only">{{ ui.linkedin_of.format(name=m.name) }}</span></a>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<section id="contacto" class="section contact">
+  <div class="wrap contact-inner">
+    <div class="contact-info" data-reveal>
+      <h2>{{ s.contact_title }}</h2>
+      {% if s.contact_intro %}<p>{{ s.contact_intro }}</p>{% endif %}
+      <p class="contact-direct">{{ ui.contact_direct }}</p>
+      <ul class="channels">
+        {% if s.whatsapp %}<li><a href="https://wa.me/{{ s.whatsapp|replace('+','')|replace(' ','') }}" target="_blank" rel="noopener">{{ icon('whatsapp', 22) }} <span>{{ s.whatsapp }}</span></a></li>{% endif %}
+        {% if s.email %}<li><a href="mailto:{{ s.email }}">{{ icon('mail', 22) }} <span>{{ s.email }}</span></a></li>{% endif %}
+        {% if s.instagram %}<li><a href="https://instagram.com/{{ s.instagram }}" target="_blank" rel="noopener">{{ icon('instagram', 22) }} <span>@{{ s.instagram }}</span></a></li>{% endif %}
+      </ul>
+    </div>
+    <form class="contact-form" method="post" action="{{ url_for('contact', lang=lang) }}" data-reveal style="--d:120ms">
+      {% if form_status == 'ok' %}<p class="form-msg is-ok" role="status">{{ ui.form_sent }}</p>
+      {% elif form_status == 'error' %}<p class="form-msg is-error" role="alert">{{ ui.form_error }}</p>{% endif %}
+      <div class="field-row">
+        <label class="field"><input name="name" autocomplete="name" required maxlength="120" placeholder=" "><span>{{ ui.form_name }}</span></label>
+        <label class="field"><input name="email" type="email" autocomplete="email" required placeholder=" "><span>{{ ui.form_email }}</span></label>
+      </div>
+      <label class="field"><input name="subject" required maxlength="160" placeholder=" "><span>{{ ui.form_subject }}</span></label>
+      <label class="field"><textarea name="message" rows="5" required placeholder=" "></textarea><span>{{ ui.form_message }}</span></label>
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <button class="btn btn-send" type="submit"><span>{{ ui.form_send }}</span>{{ icon('send', 20) }}</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ ui.all_projects_title }} · La Escuelita Ambiental Móvil{% endblock %}
+{% block content %}
+<section class="section projects-section page-top">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <h1 class="h2">{{ ui.all_projects_title }}</h1>
+        {% if c.site.projects_intro %}<p>{{ c.site.projects_intro }}</p>{% endif %}
+      </div>
+      <a class="link-arrow" href="{{ url_for('home', lang=lang) }}"><span>{{ ui.back_home }}</span>{{ icon('arrow', 18) }}</a>
+    </div>
+    <div class="project-grid">
+      {% for p in c.projects %}{% include "partials/project_card.html" %}
+      {% else %}<p>{{ ui.no_projects }}</p>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

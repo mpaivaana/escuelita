@@ -1,0 +1,89 @@
+"""Textos fixos da interface (os textos de conteúdo vêm do CMS)."""
+
+LANGS = ("es", "en", "pt")
+DEFAULT_LANG = "es"
+LANG_NAMES = {"es": "Español", "en": "English", "pt": "Português"}
+PROJECTS_SLUG = {"es": "proyectos", "en": "projects", "pt": "projetos"}
+
+UI = {
+    "es": {
+        "skip": "Saltar al contenido",
+        "nav_about": "Nosotros", "nav_projects": "Proyectos", "nav_services": "Servicios",
+        "nav_impact": "Impacto", "nav_team": "Equipo", "nav_contact": "Contacto", "menu": "Menú", "close": "Cerrar",
+        "lang_label": "Idioma",
+        "meta_description": "Educación ambiental, sostenibilidad corporativa y campañas ambientales en el Perú.",
+        "with_partner": "Con {partner}",
+        "see_all_projects": "Ver todos los proyectos",
+        "all_projects_title": "Todos los proyectos",
+        "back_home": "Volver al inicio",
+        "no_projects": "Pronto publicaremos nuestros proyectos.",
+        "services_cta": "Pedir una propuesta",
+        "contact_direct": "También puedes escribirnos directamente",
+        "form_name": "Nombre", "form_email": "Correo electrónico", "form_subject": "Asunto",
+        "form_message": "Mensaje", "form_send": "Enviar mensaje",
+        "form_sent": "Mensaje enviado. Te responderemos en breve.",
+        "form_error": "No pudimos enviar el mensaje. Revisa los campos o escríbenos por WhatsApp.",
+        "footer_rights": "Todos los derechos reservados.",
+        "scroll_cue": "Desplázate",
+        "marquee": ["Educación ambiental", "Sostenibilidad corporativa", "Campañas y voluntariados", "Innovación social", "Comunidad"],
+        "pillars_kicker": "Lo que nos mueve",
+        "read_project": "Ver el proyecto",
+        "linkedin_of": "LinkedIn de {name}",
+    },
+    "en": {
+        "skip": "Skip to content",
+        "nav_about": "About", "nav_projects": "Projects", "nav_services": "Services",
+        "nav_impact": "Impact", "nav_team": "Team", "nav_contact": "Contact", "menu": "Menu", "close": "Close",
+        "lang_label": "Language",
+        "meta_description": "Environmental education, corporate sustainability and environmental campaigns in Peru.",
+        "with_partner": "With {partner}",
+        "see_all_projects": "See all projects",
+        "all_projects_title": "All projects",
+        "back_home": "Back to home",
+        "no_projects": "Our projects will be published soon.",
+        "services_cta": "Request a proposal",
+        "contact_direct": "You can also reach us directly",
+        "form_name": "Name", "form_email": "Email", "form_subject": "Subject",
+        "form_message": "Message", "form_send": "Send message",
+        "form_sent": "Message sent. We will get back to you soon.",
+        "form_error": "We couldn't send your message. Check the fields or reach us on WhatsApp.",
+        "footer_rights": "All rights reserved.",
+        "scroll_cue": "Scroll",
+        "marquee": ["Environmental education", "Corporate sustainability", "Campaigns and volunteering", "Social innovation", "Community"],
+        "pillars_kicker": "What drives us",
+        "read_project": "See the project",
+        "linkedin_of": "{name} on LinkedIn",
+    },
+    "pt": {
+        "skip": "Pular para o conteúdo",
+        "nav_about": "Quem somos", "nav_projects": "Projetos", "nav_services": "Serviços",
+        "nav_impact": "Impacto", "nav_team": "Equipe", "nav_contact": "Contato", "menu": "Menu", "close": "Fechar",
+        "lang_label": "Idioma",
+        "meta_description": "Educação ambiental, sustentabilidade corporativa e campanhas ambientais no Peru.",
+        "with_partner": "Com {partner}",
+        "see_all_projects": "Ver todos os projetos",
+        "all_projects_title": "Todos os projetos",
+        "back_home": "Voltar ao início",
+        "no_projects": "Em breve publicaremos nossos projetos.",
+        "services_cta": "Pedir uma proposta",
+        "contact_direct": "Você também pode falar direto com a gente",
+        "form_name": "Nome", "form_email": "E-mail", "form_subject": "Assunto",
+        "form_message": "Mensagem", "form_send": "Enviar mensagem",
+        "form_sent": "Mensagem enviada. Responderemos em breve.",
+        "form_error": "Não conseguimos enviar a mensagem. Confira os campos ou fale pelo WhatsApp.",
+        "footer_rights": "Todos os direitos reservados.",
+        "scroll_cue": "Role a página",
+        "marquee": ["Educação ambiental", "Sustentabilidade corporativa", "Campanhas e voluntariado", "Inovação social", "Comunidade"],
+        "pillars_kicker": "O que nos move",
+        "read_project": "Ver o projeto",
+        "linkedin_of": "LinkedIn de {name}",
+    },
+}
+
+
+def pick_lang(accept_language: str) -> str:
+    for part in (accept_language or "").split(","):
+        code = part.split(";")[0].strip()[:2].lower()
+        if code in LANGS:
+            return code
+    return DEFAULT_LANG
