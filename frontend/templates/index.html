@@ -59,7 +59,7 @@
       </a>
     </div>
     <div class="project-grid">
-      {% for p in c.projects if p.featured %}{% if loop.index <= 4 %}{% include "partials/project_card.html" %}{% endif %}
+      {% for p in c.projects if p.featured %}{% if loop.index <= 4 %}{% with delay = loop.index0 * 110 %}{% include "partials/project_card.html" %}{% endwith %}{% endif %}
       {% else %}<p>{{ ui.no_projects }}</p>{% endfor %}
     </div>
   </div>

@@ -11,7 +11,7 @@
       <a class="link-arrow" href="{{ url_for('home', lang=lang) }}"><span>{{ ui.back_home }}</span>{{ icon('arrow', 18) }}</a>
     </div>
     <div class="project-grid">
-      {% for p in c.projects %}{% include "partials/project_card.html" %}
+      {% for p in c.projects %}{% with delay = loop.index0 * 110 %}{% include "partials/project_card.html" %}{% endwith %}
       {% else %}<p>{{ ui.no_projects }}</p>{% endfor %}
     </div>
   </div>
