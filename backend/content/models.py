@@ -20,7 +20,7 @@ class Orderable(models.Model):
 class SiteSettings(models.Model):
     """Textos gerais do site. Existe apenas um registro."""
 
-    tagline = models.CharField("firma bajo el logo", max_length=120, default="by Moray-Tech Solutions S.A.C")
+    tagline = models.CharField("firma bajo el logo", max_length=120, blank=True, default="")
     hero_image = models.ImageField("fondo de la portada", upload_to="site/", blank=True,
                                    help_text="Opcional. Si está vacío se usa la pizarra con flores.")
 

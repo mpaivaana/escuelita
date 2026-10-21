@@ -131,7 +131,7 @@ class Migration(migrations.Migration):
             name='SiteSettings',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tagline', models.CharField(default='by Moray-Tech Solutions S.A.C', max_length=120, verbose_name='firma bajo el logo')),
+                ('tagline', models.CharField(blank=True, default='', max_length=120, verbose_name='firma bajo el logo')),
                 ('hero_image', models.ImageField(blank=True, help_text='Opcional. Si está vacío se usa la pizarra con flores.', upload_to='site/', verbose_name='fondo de la portada')),
                 ('about_title', models.CharField(max_length=120, verbose_name='título · quiénes somos')),
                 ('about_title_es', models.CharField(max_length=120, null=True, verbose_name='título · quiénes somos')),
