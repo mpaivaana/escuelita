@@ -1,5 +1,6 @@
 """Configuração do CMS de La Escuelita Ambiental Móvil."""
 import os
+import sys
 from pathlib import Path
 
 import dj_database_url
@@ -40,7 +41,16 @@ INSTALLED_APPS = [
     "content",
 ]
 
-USE_CLOUDINARY = bool(os.getenv("CLOUDINARY_URL"))
+# Aceita o valor colado com espaços, aspas ou com o "CLOUDINARY_URL=" na frente.
+# Um valor inválido desliga a Cloudinary (com aviso no log) em vez de derrubar o build.
+_cloudinary = os.getenv("CLOUDINARY_URL", "").strip().strip("'\"").removeprefix("CLOUDINARY_URL=").strip()
+USE_CLOUDINARY = _cloudinary.startswith("cloudinary://")
+if USE_CLOUDINARY:
+    os.environ["CLOUDINARY_URL"] = _cloudinary
+elif _cloudinary:
+    os.environ.pop("CLOUDINARY_URL")
+    print("AVISO: CLOUDINARY_URL inválida (deve começar com cloudinary://). "
+          "As imagens serão salvas no disco e se perdem a cada deploy.", file=sys.stderr)
 if USE_CLOUDINARY:
     INSTALLED_APPS += ["cloudinary_storage", "cloudinary"]
 
