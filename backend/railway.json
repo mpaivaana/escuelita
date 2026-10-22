@@ -2,7 +2,7 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    "buildCommand": "python manage.py collectstatic --noinput -v 0"
   },
   "deploy": {
     "startCommand": "python manage.py migrate --noinput && python manage.py ensure_admin && (python manage.py seed_content --images seed_images || echo 'seed_content falhou; o site sobe mesmo assim') && gunicorn config.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 60",
