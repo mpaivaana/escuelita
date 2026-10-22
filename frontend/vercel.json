@@ -2,7 +2,7 @@
   "functions": {
     "api/index.py": { "includeFiles": "{templates,content}/**" }
   },
-  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index?__path=/$1" }],
   "headers": [
     {
       "source": "/static/(.*)",

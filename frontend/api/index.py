@@ -3,6 +3,7 @@ import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
+from urllib.parse import parse_qsl, urlencode
 
 import markdown
 from flask import Flask, abort, redirect, render_template, request, send_from_directory, url_for
@@ -15,6 +16,26 @@ from _i18n import LANG_NAMES, LANGS, MONTHS, PROJECTS_SLUG, UI, pick_lang  # noq
 ROOT = Path(__file__).resolve().parent.parent
 app = Flask(__name__, template_folder=str(ROOT / "templates"),
             static_folder=str(ROOT / "public" / "static"), static_url_path="/static")
+
+
+class RestoreVercelPath:
+    """Na Vercel, o rewrite de vercel.json entrega toda requisição como /api/index.
+    O caminho original vem em ?__path=; aqui ele volta a ser o PATH_INFO do Flask."""
+
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        query = parse_qsl(environ.get("QUERY_STRING", ""), keep_blank_values=True)
+        original = [v for k, v in query if k == "__path"]
+        if original:
+            environ["PATH_INFO"] = original[0] or "/"
+            environ["SCRIPT_NAME"] = ""
+            environ["QUERY_STRING"] = urlencode([(k, v) for k, v in query if k != "__path"])
+        return self.wsgi_app(environ, start_response)
+
+
+app.wsgi_app = RestoreVercelPath(app.wsgi_app)
 
 
 def page_context(lang, endpoint, **extra):
