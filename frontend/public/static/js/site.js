@@ -25,6 +25,17 @@
     box.addEventListener("keydown", (e) => { if (e.key === "Escape") { setOpen(false); btn.focus(); } });
   });
 
+  /* Vídeo de Nosotros: capa própria; os controles nativos só aparecem ao tocar */
+  document.querySelectorAll("[data-video]").forEach((box) => {
+    const video = box.querySelector("video");
+    video.controls = false;
+    box.querySelector(".about-video-cover").addEventListener("click", () => {
+      box.classList.add("is-playing");
+      video.controls = true;
+      video.play();
+    });
+  });
+
   /* Texto em palavras (revelação do parágrafo de abertura) ---------------- */
   document.querySelectorAll("[data-split]").forEach((el) => {
     const words = el.textContent.trim().split(/\s+/);

@@ -1,13 +1,16 @@
 """Front-end público de La Escuelita Ambiental Móvil (Flask na Vercel)."""
+import re
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
-from flask import Flask, abort, redirect, render_template, request, url_for
+import markdown
+from flask import Flask, abort, redirect, render_template, request, send_from_directory, url_for
+from markupsafe import Markup
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _content import get_content, send_contact  # noqa: E402
-from _i18n import LANG_NAMES, LANGS, PROJECTS_SLUG, UI, pick_lang  # noqa: E402
+from _content import get_blog, get_content, get_post, send_contact  # noqa: E402
+from _i18n import LANG_NAMES, LANGS, MONTHS, PROJECTS_SLUG, UI, pick_lang  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 app = Flask(__name__, template_folder=str(ROOT / "templates"),
@@ -23,10 +26,39 @@ def page_context(lang, endpoint, **extra):
     }
 
 
+HTML_BLOCK = re.compile(r"<(div|p|h[1-6]|ul|ol|blockquote|pre)\b", re.I)
+
+
+@app.template_filter("markdown")
+def render_markdown(text):
+    """Corpo das entradas do blog. O editor visual do CMS manda HTML (já limpo no backend);
+    textos antigos ou de exemplo em Markdown são convertidos aqui."""
+    text = text or ""
+    if HTML_BLOCK.search(text):
+        return Markup(text)
+    return Markup(markdown.markdown(text, extensions=["sane_lists"], output_format="html"))
+
+
+@app.template_filter("pretty_date")
+def pretty_date(value, lang="es"):
+    try:
+        d = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return value
+    month = MONTHS[lang][d.month - 1]
+    return f"{month} {d.day}, {d.year}" if lang == "en" else f"{d.day} de {month} de {d.year}"
+
+
 def cached(html):
     resp = app.make_response(html)
     resp.headers["Cache-Control"] = "public, s-maxage=300, stale-while-revalidate=86400"
     return resp
+
+
+@app.get("/favicon.ico")
+def favicon():
+    # Navegadores pedem /favicon.ico na raiz mesmo com o <link rel="icon"> no HTML
+    return send_from_directory(Path(app.static_folder) / "img", "favicon.ico", max_age=604800)
 
 
 @app.get("/")
@@ -50,6 +82,25 @@ def projects(lang, slug):
         abort(404)
     content = get_content(lang)
     return cached(render_template("projects.html", c=content, **page_context(lang, "projects")))
+
+
+@app.get("/<lang>/blog/")
+def blog(lang):
+    if lang not in LANGS:
+        abort(404)
+    posts = get_blog(lang)
+    return cached(render_template("blog.html", posts=posts, active_nav="blog", **page_context(lang, "blog")))
+
+
+@app.get("/<lang>/blog/<slug>/")
+def blog_post(lang, slug):
+    if lang not in LANGS:
+        abort(404)
+    post = get_post(lang, slug)
+    if not post:
+        abort(404)
+    return cached(render_template("blog_post.html", post=post, active_nav="blog",
+                                  **page_context(lang, "blog_post", slug=slug)))
 
 
 @app.post("/<lang>/contacto")

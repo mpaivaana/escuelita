@@ -1,0 +1,84 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}Inicio | {{ site_title }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="esc-dash">
+    <section class="esc-hero">
+        <div>
+            <p class="esc-eyebrow">Gestor de contenido</p>
+            <h1 class="esc-hero-title">¡Hola, {{ greeting_name }}!</h1>
+            <p class="esc-hero-text">Desde aquí editas el sitio de La Escuelita Ambiental Móvil y publicas en el blog. Los cambios aparecen en el sitio en pocos minutos.</p>
+        </div>
+        <div class="esc-hero-actions">
+            <a class="esc-btn esc-btn-primary" href="{% url 'admin:content_blogpost_add' %}">
+                <span class="material-symbols-outlined">edit_square</span> Nueva entrada
+            </a>
+            <a class="esc-btn esc-btn-ghost" href="{{ frontend_url }}/es/" target="_blank" rel="noopener">
+                <span class="material-symbols-outlined">open_in_new</span> Ver el sitio
+            </a>
+        </div>
+    </section>
+
+    <section class="esc-stats" aria-label="Resumen">
+        {% for s in stats %}
+        <a class="esc-stat" href="{{ s.link }}">
+            <span class="material-symbols-outlined esc-stat-icon">{{ s.icon }}</span>
+            <span class="esc-stat-value">{{ s.value }}</span>
+            <span class="esc-stat-label">{{ s.label }}</span>
+        </a>
+        {% endfor %}
+    </section>
+
+    <h2 class="esc-section-title">¿Qué quieres hacer?</h2>
+    <section class="esc-shortcuts">
+        {% for s in shortcuts %}
+        <a class="esc-shortcut" href="{{ s.link }}">
+            <span class="material-symbols-outlined esc-shortcut-icon">{{ s.icon }}</span>
+            <span class="esc-shortcut-title">{{ s.title }}</span>
+            <span class="esc-shortcut-text">{{ s.text }}</span>
+            <span class="material-symbols-outlined esc-shortcut-arrow">arrow_forward</span>
+        </a>
+        {% endfor %}
+    </section>
+
+    <div class="esc-columns">
+        <section class="esc-panel">
+            <header class="esc-panel-head">
+                <h2>Últimas entradas del blog</h2>
+                <a href="{% url 'admin:content_blogpost_changelist' %}">Ver todas</a>
+            </header>
+            {% for p in recent_posts %}
+            <a class="esc-row" href="{% url 'admin:content_blogpost_change' p.pk %}">
+                <span class="esc-row-main">{{ p.title }}</span>
+                {% if not p.published %}<span class="esc-pill esc-pill-warning">Borrador</span>
+                {% else %}<span class="esc-pill esc-pill-success">Publicada</span>{% endif %}
+            </a>
+            {% empty %}
+            <p class="esc-empty">Todavía no hay entradas. <a href="{% url 'admin:content_blogpost_add' %}">Escribe la primera</a>.</p>
+            {% endfor %}
+        </section>
+
+        <section class="esc-panel">
+            <header class="esc-panel-head">
+                <h2>Mensajes recientes</h2>
+                <a href="{% url 'admin:content_contactmessage_changelist' %}">Ver todos</a>
+            </header>
+            {% for m in recent_messages %}
+            <a class="esc-row" href="{% url 'admin:content_contactmessage_change' m.pk %}">
+                <span class="esc-row-main">{{ m.name }} <small>· {{ m.subject }}</small></span>
+                {% if m.handled %}<span class="esc-pill esc-pill-success">Respondido</span>
+                {% else %}<span class="esc-pill esc-pill-danger">Nuevo</span>{% endif %}
+            </a>
+            {% empty %}
+            <p class="esc-empty">Aún no llegaron mensajes desde el formulario del sitio.</p>
+            {% endfor %}
+        </section>
+    </div>
+</div>
+{% endblock %}

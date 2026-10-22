@@ -1,21 +1,115 @@
-/* Deixa o admin com as cores da marca */
-:root, html[data-theme="light"] {
-  --primary: #145a3c;
-  --secondary: #1f7a52;
-  --accent: #f4be3a;
-  --header-color: #f3eee3;
-  --header-link-color: #f3eee3;
-  --link-fg: #1f7a52;
-  --link-hover-color: #145a3c;
-  --button-bg: #1f7a52;
-  --button-hover-bg: #145a3c;
-  --default-button-bg: #145a3c;
-  --selected-row: #dcefdc;
-  --font-family-primary: "Poppins", system-ui, sans-serif;
+/* Gestor de contenido: identidade da Escuelita sobre o tema Unfold */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+  --esc-bosque: #145a3c;
+  --esc-bosque-2: #1f7a52;
+  --esc-maiz: #ffcd4a;
+  --esc-vermelho: #ec6a5c;
+  --esc-azul: #4682d0;
+  --esc-tiza: #f4f1e8;
+  --esc-tinta: #16211c;
+  --esc-tinta-suave: #4b5a51;
+  --esc-linea: rgb(22 33 28 / .1);
 }
-#header { background: #17302a; }
-#branding h1, #branding h1 a:link, #branding h1 a:visited { color: #f3eee3; font-weight: 600; }
-.module h2, .module caption { background: #1f7a52; }
-#header { border-bottom: 4px solid #d9483b; }
-.button.default, input[type=submit].default { background: #2e6db4; }
-.ui-tabs .ui-tabs-nav li.ui-tabs-active { border-bottom-color: #f4be3a; }
+
+html, body, input, select, textarea, button { font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif !important; }
+
+/* Faixa de cores da marca no topo */
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: 4px; z-index: 100;
+  background: linear-gradient(90deg, var(--esc-vermelho) 0 33.3%, var(--esc-maiz) 0 66.6%, var(--esc-azul) 0);
+}
+
+/* Painel inicial ---------------------------------------------------------- */
+.esc-dash { display: grid; gap: 1.75rem; max-width: 1180px; }
+.esc-hero {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
+  padding: 2rem 2.2rem; border-radius: 20px; color: #fff;
+  background: linear-gradient(120deg, rgb(20 90 60 / .94), rgb(31 122 82 / .86)), url("login.jpg") center / cover;
+  position: relative; overflow: hidden; isolation: isolate;
+}
+/* Isotipo como marca d'água no canto do painel */
+.esc-hero::after {
+  content: ""; position: absolute; z-index: -1; right: 2%; top: 50%; width: 150px; aspect-ratio: 100 / 144;
+  transform: translateY(-50%) rotate(-8deg); background: rgb(255 255 255 / .1);
+  -webkit-mask: url("isotipo.svg") center / contain no-repeat; mask: url("isotipo.svg") center / contain no-repeat;
+}
+.esc-eyebrow { margin: 0 0 .4rem; font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--esc-maiz); }
+.esc-hero-title { margin: 0; font-size: 1.9rem; font-weight: 600; line-height: 1.15; color: #fff; }
+.esc-hero-text { margin: .6rem 0 0; max-width: 52ch; font-size: .95rem; line-height: 1.6; color: rgb(255 255 255 / .85); }
+.esc-hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.esc-btn {
+  display: inline-flex; align-items: center; gap: .45rem; padding: .7rem 1.15rem; border-radius: 999px;
+  font-size: .9rem; font-weight: 600; text-decoration: none; transition: transform .2s, background .2s;
+}
+.esc-btn:hover { transform: translateY(-1px); }
+.esc-btn .material-symbols-outlined { font-size: 1.15rem; }
+.esc-btn-primary { background: var(--esc-maiz); color: var(--esc-bosque) !important; }
+.esc-btn-ghost { background: rgb(255 255 255 / .12); color: #fff !important; border: 1px solid rgb(255 255 255 / .35); }
+.esc-btn-ghost:hover { background: rgb(255 255 255 / .2); }
+
+.esc-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.esc-stat {
+  position: relative; display: grid; gap: .2rem; padding: 1.25rem 1.3rem; border-radius: 16px; text-decoration: none;
+  background: #fff; border: 1px solid var(--esc-linea); transition: border-color .2s, box-shadow .2s;
+}
+.esc-stat:hover { border-color: rgb(31 122 82 / .4); box-shadow: 0 8px 24px rgb(20 90 60 / .08); }
+.esc-stat-icon { position: absolute; top: 1.1rem; right: 1.1rem; color: var(--esc-bosque-2); opacity: .55; }
+.esc-stat-value { font-size: 2rem; font-weight: 600; line-height: 1.1; color: var(--esc-bosque); }
+.esc-stat-label { font-size: .82rem; color: var(--esc-tinta-suave); }
+.esc-stat:nth-child(2) .esc-stat-value { color: #a86a00; }
+.esc-stat:nth-child(3) .esc-stat-value { color: #c2412f; }
+
+.esc-section-title { margin: .5rem 0 -.6rem; font-size: 1.05rem; font-weight: 600; color: var(--esc-tinta); }
+.esc-shortcuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.esc-shortcut {
+  position: relative; display: grid; gap: .35rem; align-content: start; padding: 1.3rem 1.3rem 2.6rem; border-radius: 16px;
+  text-decoration: none; background: #fff; border: 1px solid var(--esc-linea); transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.esc-shortcut:hover { transform: translateY(-2px); border-color: rgb(31 122 82 / .4); box-shadow: 0 10px 28px rgb(20 90 60 / .1); }
+.esc-shortcut-icon {
+  display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: .4rem; border-radius: 12px;
+  background: #e3f2e8; color: var(--esc-bosque);
+}
+.esc-shortcut:nth-child(2) .esc-shortcut-icon { background: #fff4d6; color: #8a5a0b; }
+.esc-shortcut:nth-child(3) .esc-shortcut-icon { background: #fde5e1; color: #b23b2c; }
+.esc-shortcut:nth-child(4) .esc-shortcut-icon { background: #e1ecfa; color: #2b62a8; }
+.esc-shortcut-title { font-weight: 600; font-size: .95rem; color: var(--esc-tinta); }
+.esc-shortcut-text { font-size: .82rem; line-height: 1.5; color: var(--esc-tinta-suave); }
+.esc-shortcut-arrow { position: absolute; left: 1.3rem; bottom: 1rem; font-size: 1.1rem; color: var(--esc-bosque-2); transition: transform .2s; }
+.esc-shortcut:hover .esc-shortcut-arrow { transform: translateX(4px); }
+
+.esc-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.esc-panel { padding: 1.2rem 1.3rem; border-radius: 16px; background: #fff; border: 1px solid var(--esc-linea); }
+.esc-panel-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .6rem; }
+.esc-panel-head h2 { margin: 0; font-size: .95rem; font-weight: 600; color: var(--esc-tinta); }
+.esc-panel-head a { font-size: .82rem; font-weight: 500; color: var(--esc-bosque-2); }
+.esc-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem .4rem;
+  border-top: 1px solid var(--esc-linea); text-decoration: none; color: var(--esc-tinta); font-size: .88rem;
+}
+.esc-row:hover { background: #f7faf5; }
+.esc-row small { color: var(--esc-tinta-suave); }
+.esc-row-main { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.esc-pill { flex: none; padding: .15rem .6rem; border-radius: 999px; font-size: .72rem; font-weight: 600; }
+.esc-pill-success { background: #e3f2e8; color: var(--esc-bosque); }
+.esc-pill-warning { background: #fff4d6; color: #8a5a0b; }
+.esc-pill-danger { background: #fde5e1; color: #b23b2c; }
+.esc-empty { margin: .6rem 0 0; font-size: .88rem; color: var(--esc-tinta-suave); }
+.esc-empty a { color: var(--esc-bosque-2); font-weight: 500; }
+
+@media (max-width: 1100px) {
+  .esc-stats, .esc-shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .esc-stats, .esc-shortcuts, .esc-columns { grid-template-columns: 1fr; }
+  .esc-hero { padding: 1.5rem; }
+}
+
+/* Modo escuro do gestor */
+html.dark .esc-stat, html.dark .esc-shortcut, html.dark .esc-panel { background: #1c2621; border-color: rgb(255 255 255 / .08); }
+html.dark .esc-stat-value, html.dark .esc-shortcut-title, html.dark .esc-panel-head h2, html.dark .esc-row,
+html.dark .esc-section-title { color: #eef2ec; }
+html.dark .esc-stat-label, html.dark .esc-shortcut-text, html.dark .esc-row small, html.dark .esc-empty { color: #a9b8ae; }
+html.dark .esc-row:hover { background: rgb(255 255 255 / .04); }

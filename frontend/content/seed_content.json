@@ -276,5 +276,49 @@
         "pt": "Oferece suporte administrativo para o desenvolvimento das atividades da La Escuelita Ambiental Móvil."
       }
     }
+  ],
+  "blog": [
+    {
+      "slug": "limpieza-de-playa-en-chorrillos",
+      "cover": "heroes-del-ambiente.png",
+      "author": "La Escuelita Ambiental Móvil",
+      "published_at": "2026-10-10T10:00:00-05:00",
+      "title": {
+        "es": "Ejemplo · Limpieza de playa en Chorrillos",
+        "en": "Example · Beach clean-up in Chorrillos",
+        "pt": "Exemplo · Limpeza de praia em Chorrillos"
+      },
+      "excerpt": {
+        "es": "Entrada de ejemplo para ver el diseño del blog. Se reemplaza con el contenido del gestor.",
+        "en": "Sample post to preview the blog design. It is replaced by content from the CMS.",
+        "pt": "Postagem de exemplo para visualizar o blog. É substituída pelo conteúdo do gestor."
+      },
+      "body": {
+        "es": "Este es un texto de ejemplo. Las entradas reales se escriben en el gestor de contenido.\n\n## Lo que logramos\n\n- **120 kg** de residuos recolectados\n- 80 voluntarias y voluntarios\n\nGracias a todas las personas que participaron.",
+        "en": "This is sample text. Real posts are written in the content manager.\n\n## What we achieved\n\n- **120 kg** of waste collected\n- 80 volunteers\n\nThanks to everyone who took part.",
+        "pt": "Este é um texto de exemplo. As postagens reais são escritas no gestor de conteúdo.\n\n## O que conquistamos\n\n- **120 kg** de resíduos coletados\n- 80 voluntárias e voluntários\n\nObrigado a todas as pessoas que participaram."
+      }
+    },
+    {
+      "slug": "guardianes-del-oceano-cierre",
+      "cover": "guardianes-del-oceano.png",
+      "author": "",
+      "published_at": "2026-09-22T10:00:00-05:00",
+      "title": {
+        "es": "Ejemplo · Cierre de Guardianes del Océano",
+        "en": "Example · Ocean Guardians wrap-up",
+        "pt": "Exemplo · Encerramento de Guardiões do Oceano"
+      },
+      "excerpt": {
+        "es": "Segunda entrada de ejemplo, solo visible en desarrollo.",
+        "en": "Second sample post, only visible in development.",
+        "pt": "Segunda postagem de exemplo, visível só em desenvolvimento."
+      },
+      "body": {
+        "es": "Texto de ejemplo.",
+        "en": "Sample text.",
+        "pt": "Texto de exemplo."
+      }
+    }
   ]
 }

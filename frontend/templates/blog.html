@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ ui.nav_blog }} · La Escuelita Ambiental Móvil{% endblock %}
+{% block description %}{{ ui.blog_intro }}{% endblock %}
+{% block content %}
+<section class="section blog-top page-top">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <div>
+        <h1 class="h2">{{ ui.nav_blog }}</h1>
+        <p>{{ ui.blog_intro }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section blog-list">
+  <div class="wrap">
+    {% if posts %}
+    <div class="post-grid">
+      {% for p in posts %}{% with delay = loop.index0 * 90 %}{% include "partials/post_card.html" %}{% endwith %}{% endfor %}
+    </div>
+    {% else %}
+    <p class="blog-empty">{{ ui.blog_empty }}</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

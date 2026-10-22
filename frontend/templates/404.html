@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% block title %}404 · La Escuelita Ambiental Móvil{% endblock %}
 {% block content %}
-<section class="section about page-top">
+<section class="section page-top not-found">
   <div class="wrap">
     <h1 class="h2">404</h1>
-    <p><a class="link-arrow" href="{{ url_for('home', lang=lang) }}">{{ ui.back_home }}</a></p>
+    <p>{{ ui.not_found }}</p>
+    <a class="link-arrow" href="{{ url_for('home', lang=lang) }}"><span>{{ ui.back_home }}</span>{{ icon('arrow', 18) }}</a>
   </div>
 </section>
 {% endblock %}

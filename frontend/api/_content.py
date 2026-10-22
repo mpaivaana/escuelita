@@ -70,6 +70,53 @@ def get_content(lang: str) -> dict:
     return data
 
 
+def _seed_posts(lang: str) -> list[dict]:
+    raw = json.loads(SEED_FILE.read_text(encoding="utf-8")).get("blog", [])
+    posts = []
+    for p in raw:
+        item = _localize(p, lang)
+        item["cover"] = f"/static/img/{p['cover']}" if p.get("cover") else None
+        posts.append(item)
+    return posts
+
+
+def get_blog(lang: str) -> list[dict]:
+    """Entradas publicadas (sem o corpo). Sem backend configurado, usa os exemplos do seed."""
+    key = f"blog:{lang}"
+    hit = _cache.get(key)
+    if hit and time.time() - hit[0] < TTL:
+        return hit[1]
+    if not API_URL:
+        return [{k: v for k, v in p.items() if k != "body"} for p in _seed_posts(lang)]
+    try:
+        resp = requests.get(f"{API_URL}/api/blog/", params={"lang": lang}, timeout=8)
+        resp.raise_for_status()
+        posts = resp.json().get("posts", [])
+    except Exception:
+        return hit[1] if hit else []  # nunca mostra exemplos falsos em produção
+    _cache[key] = (time.time(), posts)
+    return posts
+
+
+def get_post(lang: str, slug: str) -> dict | None:
+    key = f"post:{lang}:{slug}"
+    hit = _cache.get(key)
+    if hit and time.time() - hit[0] < TTL:
+        return hit[1]
+    if not API_URL:
+        return next((p for p in _seed_posts(lang) if p["slug"] == slug), None)
+    try:
+        resp = requests.get(f"{API_URL}/api/blog/{slug}/", params={"lang": lang}, timeout=8)
+        if resp.status_code == 404:
+            return None
+        resp.raise_for_status()
+        post = resp.json()
+    except Exception:
+        return hit[1] if hit else None
+    _cache[key] = (time.time(), post)
+    return post
+
+
 def send_contact(payload: dict) -> bool:
     if not API_URL:
         return True  # em dev sem backend, só simula

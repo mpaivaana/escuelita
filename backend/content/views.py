@@ -5,9 +5,10 @@ from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
-from .models import ImpactStat, Pillar, Project, Service, SiteSettings, TeamMember
-from .serializers import (ContactMessageSerializer, ImageUrlMixin, ImpactStatSerializer, PillarSerializer,
-                          ProjectSerializer, ServiceSerializer, TeamMemberSerializer)
+from .models import BlogPost, ImpactStat, Pillar, Project, Service, SiteSettings, TeamMember
+from .serializers import (BlogPostListSerializer, BlogPostSerializer, ContactMessageSerializer, ImageUrlMixin,
+                          ImpactStatSerializer, PillarSerializer, ProjectSerializer, ServiceSerializer,
+                          TeamMemberSerializer)
 
 SUPPORTED = {"es", "en", "pt"}
 SITE_FIELDS = ("tagline", "about_title", "about_text", "projects_title", "projects_intro", "services_title",
@@ -42,6 +43,33 @@ class SiteContentView(ImageUrlMixin, APIView):
                 "stats": ImpactStatSerializer(ImpactStat.objects.filter(published=True), many=True).data,
                 "team": TeamMemberSerializer(TeamMember.objects.filter(published=True), many=True, context=ctx).data,
             }
+        response = Response(data)
+        response["Cache-Control"] = "public, max-age=60"
+        return response
+
+
+class BlogListView(APIView):
+    """Entradas publicadas, mais recentes primeiro: GET /api/blog/?lang=es"""
+
+    def get(self, request):
+        lang = get_lang(request)
+        with translation.override(lang):
+            posts = BlogPostListSerializer(BlogPost.visible(), many=True, context={"request": request}).data
+        response = Response({"lang": lang, "posts": posts})
+        response["Cache-Control"] = "public, max-age=60"
+        return response
+
+
+class BlogPostView(APIView):
+    """Uma entrada: GET /api/blog/<slug>/?lang=es"""
+
+    def get(self, request, slug):
+        lang = get_lang(request)
+        post = BlogPost.visible().filter(slug=slug).first()
+        if not post:
+            return Response({"detail": "not found"}, status=status.HTTP_404_NOT_FOUND)
+        with translation.override(lang):
+            data = BlogPostSerializer(post, context={"request": request}).data
         response = Response(data)
         response["Cache-Control"] = "public, max-age=60"
         return response

@@ -3,8 +3,11 @@
 Os campos de texto marcados em translation.py ganham automaticamente versões
 _es, _en e _pt no banco (django-modeltranslation).
 """
+import nh3
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 
 
@@ -139,6 +142,57 @@ class TeamMember(Orderable):
 
     def __str__(self):
         return self.name
+
+
+class BlogPost(models.Model):
+    """Entrada do blog. Só aparece no site quando publicada e com data de publicação já alcançada."""
+
+    title = models.CharField("título", max_length=160)
+    slug = models.SlugField("dirección (URL)", max_length=180, unique=True, blank=True,
+                            help_text="Se genera sola a partir del título en español.")
+    excerpt = models.TextField("resumen", max_length=300, blank=True,
+                               help_text="Una o dos frases para la lista del blog y para compartir en redes.")
+    body = models.TextField(
+        "contenido",
+        help_text="Usa la barra de herramientas para dar formato: negrita, títulos, listas, citas y enlaces.",
+    )
+    cover = models.ImageField("imagen de portada", upload_to="blog/", blank=True,
+                              help_text="Horizontal (16:9) de preferencia.")
+    author = models.CharField("autor/a", max_length=120, blank=True)
+    published_at = models.DateTimeField("fecha de publicación", default=timezone.now,
+                                        help_text="Si pones una fecha futura, se publica automáticamente ese día.")
+    published = models.BooleanField("publicado", default=False,
+                                    help_text="Desmarcado = borrador (no aparece en el sitio).")
+    updated_at = models.DateTimeField("última edición", auto_now=True)
+
+    class Meta:
+        verbose_name = "entrada del blog"
+        verbose_name_plural = "entradas del blog"
+        ordering = ["-published_at", "-id"]
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.title_es or self.title)[:170] or "entrada"
+            slug, n = base, 2
+            while BlogPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug, n = f"{base}-{n}", n + 1
+            self.slug = slug
+        # O editor visual gera HTML: fica só a formatação segura (sem scripts, estilos ou eventos)
+        for code in ("es", "en", "pt"):
+            value = getattr(self, f"body_{code}", None)
+            if value:
+                setattr(self, f"body_{code}", nh3.clean(value))
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return f"{settings.FRONTEND_URL}/es/blog/{self.slug}/"
+
+    @classmethod
+    def visible(cls):
+        return cls.objects.filter(published=True, published_at__lte=timezone.now())
 
 
 class ContactMessage(models.Model):

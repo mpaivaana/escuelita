@@ -1,6 +1,6 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import ImpactStat, Pillar, Project, Service, SiteSettings, TeamMember
+from .models import BlogPost, ImpactStat, Pillar, Project, Service, SiteSettings, TeamMember
 
 
 @register(SiteSettings)
@@ -32,3 +32,8 @@ class ImpactStatTR(TranslationOptions):
 @register(TeamMember)
 class TeamMemberTR(TranslationOptions):
     fields = ("role", "bio")
+
+
+@register(BlogPost)
+class BlogPostTR(TranslationOptions):
+    fields = ("title", "excerpt", "body")

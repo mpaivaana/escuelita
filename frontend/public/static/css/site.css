@@ -140,8 +140,8 @@ a { color: inherit; }
   background: var(--maiz); transform: scaleX(0); transform-origin: right;
   transition: transform .45s var(--ease);
 }
-.nav > ul > li > a:hover, .nav > ul > li > a.is-active { opacity: 1; }
-.nav > ul > li > a:hover::after, .nav > ul > li > a.is-active::after { transform: scaleX(1); transform-origin: left; }
+.nav > ul > li > a:hover, .nav > ul > li > a.is-active, .nav > ul > li > a[aria-current="page"] { opacity: 1; }
+.nav > ul > li > a:hover::after, .nav > ul > li > a.is-active::after, .nav > ul > li > a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
 .nav-toggle { display: none; background: none; border: 0; color: inherit; padding: .4rem; cursor: pointer; }
 
 .lang-switch { position: relative; padding-left: .9rem; border-left: 1px solid rgb(255 255 255 / .2); }
@@ -237,16 +237,22 @@ a { color: inherit; }
 .about-intro .lead { font-size: var(--step-1); line-height: 1.6; max-width: none; }
 .about-video {
   position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-lg); overflow: hidden;
-  display: grid; place-content: center; justify-items: center; gap: .9rem; color: var(--tiza);
-  background: var(--bosque-2) url("../img/pizarra.jpg") center / cover no-repeat;
-  box-shadow: 0 18px 50px rgb(20 74 50 / .18);
+  background: var(--bosque-2); box-shadow: 0 18px 50px rgb(20 74 50 / .18);
 }
-.about-video::before { content: ""; position: absolute; inset: 0; background: rgb(14 52 36 / .35); }
-.about-video > * { position: relative; }
+.about-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.about-video-cover {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .9rem;
+  border: 0; padding: 0; font: inherit; color: var(--tiza); cursor: pointer;
+  background: rgb(14 52 36 / .28); transition: background .3s var(--ease);
+}
+.about-video-cover:hover, .about-video-cover:focus-visible { background: rgb(14 52 36 / .4); }
+.about-video-cover:hover .about-video-play { transform: scale(1.06); }
+.about-video.is-playing .about-video-cover, .no-js .about-video-cover { display: none; }
 .about-video-play {
   display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%;
   background: rgb(255 255 255 / .16); border: 1px solid rgb(255 255 255 / .4);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: transform .3s var(--ease);
 }
 .about-video-label { font-size: var(--step--1); font-weight: 500; letter-spacing: .04em; opacity: .9; }
 .lead { font-size: var(--step-2); font-weight: 300; line-height: 1.5; max-width: 40ch; }
@@ -374,6 +380,52 @@ a { color: inherit; }
 .impact-stat:nth-child(4n+2) .impact-text::before { background: var(--vermelho); }
 .impact-stat:nth-child(4n+3) .impact-text::before { background: var(--azul); }
 .impact-stat:nth-child(4n) .impact-text::before { background: var(--bosque-3); }
+
+/* Blog -------------------------------------------------------------------- */
+.blog-top, .not-found { background: var(--bosque-2); color: var(--tiza); padding-bottom: clamp(3rem, 2rem + 3vw, 4.5rem); }
+.not-found { min-height: 60vh; }
+.not-found p { margin: 1rem 0 2.2rem; color: rgb(244 241 232 / .85); font-size: var(--step-1); }
+.blog-top .section-head { margin-bottom: 0; }
+.blog-list { background: var(--tiza); }
+.post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 3.2rem 2rem; }
+.post-card { position: relative; display: grid; align-content: start; gap: .55rem; }
+.post-card-media {
+  display: block; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; margin-bottom: .7rem;
+  background: var(--bosque-2) url("../img/pizarra.jpg") center / cover no-repeat;
+}
+.post-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.post-card:hover .post-card-media img { transform: scale(1.04); }
+.post-date { font-size: var(--step--2); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-suave); }
+.post-card-title { font-size: var(--step-1); line-height: 1.25; color: var(--bosque); }
+.post-card-title a { text-decoration: none; color: inherit; }
+.post-card-title a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
+.post-card-title a:focus-visible { outline: none; }
+.post-card-title a:focus-visible::after { outline: 3px solid var(--maiz); outline-offset: 6px; }
+.post-card-excerpt { color: var(--tinta-suave); font-size: .95rem; }
+.post-card-more { display: inline-flex; align-items: center; gap: .45rem; margin-top: .3rem; font-size: var(--step--1); font-weight: 600; color: var(--vermelho-forte); }
+.post-card-more .icon { transition: transform .45s var(--ease); }
+.post-card:hover .post-card-more .icon { transform: translateX(5px); }
+.blog-empty { color: var(--tinta-suave); font-size: var(--step-1); }
+
+.post-wrap { max-width: 780px; }
+.link-back .icon { transform: rotate(180deg); }
+.link-back:hover .icon { transform: rotate(180deg) translateX(6px); }
+.post-meta { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 2.2rem; font-size: var(--step--1); color: rgb(244 241 232 / .8); }
+.post-head h1 { margin-top: .7rem; font-size: var(--step-3); }
+.post-excerpt { margin-top: 1.3rem; font-size: var(--step-1); font-weight: 300; color: rgb(244 241 232 / .88); }
+.post-body-section { background: var(--tiza); padding-top: clamp(2.5rem, 2rem + 2vw, 4rem); }
+.post-cover { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 2.6rem; }
+.prose { font-size: 1.05rem; line-height: 1.8; color: var(--tinta); }
+.prose > * + * { margin-top: 1.15em; }
+.prose h1, .prose h2 { margin-top: 2em; font-size: var(--step-2); color: var(--bosque); }
+.prose h3, .prose h4 { margin-top: 1.7em; font-size: var(--step-1); color: var(--bosque); }
+.prose pre { overflow-x: auto; padding: 1rem; border-radius: 12px; background: var(--papel); font-size: .9rem; }
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose li + li { margin-top: .35em; }
+.prose a { color: var(--azul-profundo); text-underline-offset: 3px; }
+.prose blockquote { margin-inline: 0; padding-left: 1.2rem; border-left: 3px solid var(--maiz); font-style: italic; color: var(--tinta-suave); }
+.prose img { border-radius: var(--radius); }
+.post-foot { margin-top: 3.5rem; color: var(--bosque); }
 
 /* Equipo ------------------------------------------------------------------ */
 .team { background: var(--tiza); }

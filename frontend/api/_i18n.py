@@ -4,6 +4,14 @@ LANGS = ("es", "en", "pt")
 DEFAULT_LANG = "es"
 LANG_NAMES = {"es": "Español", "en": "English", "pt": "Português"}
 PROJECTS_SLUG = {"es": "proyectos", "en": "projects", "pt": "projetos"}
+MONTHS = {
+    "es": ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
+           "noviembre", "diciembre"],
+    "en": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+           "November", "December"],
+    "pt": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro",
+           "novembro", "dezembro"],
+}
 
 UI = {
     "es": {
@@ -16,6 +24,7 @@ UI = {
         "see_all_projects": "Ver todos los proyectos",
         "all_projects_title": "Todos los proyectos",
         "back_home": "Volver al inicio",
+        "not_found": "No encontramos esta página.",
         "no_projects": "Pronto publicaremos nuestros proyectos.",
         "services_cta": "Pedir una propuesta",
         "contact_direct": "También puedes escribirnos directamente",
@@ -24,7 +33,10 @@ UI = {
         "form_sent": "Mensaje enviado. Te responderemos en breve.",
         "form_error": "No pudimos enviar el mensaje. Revisa los campos o escríbenos por WhatsApp.",
         "footer_rights": "Todos los derechos reservados.",
-        "video_soon": "Video próximamente",
+        "watch_video": "Ver el video",
+        "nav_blog": "Blog", "blog_intro": "Novedades, aprendizajes y historias de nuestras acciones en el territorio.",
+        "read_more": "Leer más", "back_to_blog": "Volver al blog", "blog_empty": "Pronto publicaremos nuestras primeras entradas.",
+        "by_author": "Por {author}", "latest_posts": "Más entradas",
         "back_to_top": "Volver arriba",
         "scroll_cue": "Desplázate",
         "marquee": ["Educación ambiental", "Sostenibilidad corporativa", "Campañas y voluntariados", "Innovación social", "Comunidad"],
@@ -42,6 +54,7 @@ UI = {
         "see_all_projects": "See all projects",
         "all_projects_title": "All projects",
         "back_home": "Back to home",
+        "not_found": "We couldn't find this page.",
         "no_projects": "Our projects will be published soon.",
         "services_cta": "Request a proposal",
         "contact_direct": "You can also reach us directly",
@@ -50,7 +63,10 @@ UI = {
         "form_sent": "Message sent. We will get back to you soon.",
         "form_error": "We couldn't send your message. Check the fields or reach us on WhatsApp.",
         "footer_rights": "All rights reserved.",
-        "video_soon": "Video coming soon",
+        "watch_video": "Watch the video (in Spanish)",
+        "nav_blog": "Blog", "blog_intro": "News, lessons learned and stories from our work on the ground.",
+        "read_more": "Read more", "back_to_blog": "Back to blog", "blog_empty": "Our first posts are coming soon.",
+        "by_author": "By {author}", "latest_posts": "More posts",
         "back_to_top": "Back to top",
         "scroll_cue": "Scroll",
         "marquee": ["Environmental education", "Corporate sustainability", "Campaigns and volunteering", "Social innovation", "Community"],
@@ -68,6 +84,7 @@ UI = {
         "see_all_projects": "Ver todos os projetos",
         "all_projects_title": "Todos os projetos",
         "back_home": "Voltar ao início",
+        "not_found": "Não encontramos esta página.",
         "no_projects": "Em breve publicaremos nossos projetos.",
         "services_cta": "Pedir uma proposta",
         "contact_direct": "Você também pode falar direto com a gente",
@@ -76,7 +93,10 @@ UI = {
         "form_sent": "Mensagem enviada. Responderemos em breve.",
         "form_error": "Não conseguimos enviar a mensagem. Confira os campos ou fale pelo WhatsApp.",
         "footer_rights": "Todos os direitos reservados.",
-        "video_soon": "Vídeo em breve",
+        "watch_video": "Assistir ao vídeo (em espanhol)",
+        "nav_blog": "Blog", "blog_intro": "Novidades, aprendizados e histórias das nossas ações no território.",
+        "read_more": "Ler mais", "back_to_blog": "Voltar ao blog", "blog_empty": "Em breve publicaremos nossas primeiras postagens.",
+        "by_author": "Por {author}", "latest_posts": "Mais postagens",
         "back_to_top": "Voltar ao topo",
         "scroll_cue": "Role a página",
         "marquee": ["Educação ambiental", "Sustentabilidade corporativa", "Campanhas e voluntariado", "Inovação social", "Comunidade"],

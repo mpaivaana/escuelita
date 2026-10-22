@@ -14,6 +14,7 @@
         <li><a href="{{ base }}#proyectos">{{ ui.nav_projects }}</a></li>
         <li><a href="{{ base }}#servicios">{{ ui.nav_services }}</a></li>
         <li><a href="{{ base }}#equipo">{{ ui.nav_team }}</a></li>
+        <li><a href="{{ url_for('blog', lang=lang) }}"{% if active_nav == 'blog' %} aria-current="page"{% endif %}>{{ ui.nav_blog }}</a></li>
         <li><a href="{{ base }}#contacto">{{ ui.nav_contact }}</a></li>
       </ul>
       {% include "partials/lang-switch.html" %}

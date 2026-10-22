@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import ContactMessage, ImpactStat, Pillar, Project, Service, TeamMember
+from .models import BlogPost, ContactMessage, ImpactStat, Pillar, Project, Service, TeamMember
 
 
 class ImageUrlMixin:
@@ -55,6 +55,22 @@ class TeamMemberSerializer(ImageUrlMixin, serializers.ModelSerializer):
     def get_initials(self, obj):
         parts = [w for w in obj.name.split() if w[:1].isalpha()]
         return "".join(w[0] for w in (parts[:1] + parts[-1:] if len(parts) > 1 else parts)).upper()
+
+
+class BlogPostListSerializer(ImageUrlMixin, serializers.ModelSerializer):
+    cover = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BlogPost
+        fields = ("slug", "title", "excerpt", "cover", "author", "published_at")
+
+    def get_cover(self, obj):
+        return self.image_url(obj.cover)
+
+
+class BlogPostSerializer(BlogPostListSerializer):
+    class Meta(BlogPostListSerializer.Meta):
+        fields = BlogPostListSerializer.Meta.fields + ("body", "updated_at")
 
 
 class ContactMessageSerializer(serializers.ModelSerializer):

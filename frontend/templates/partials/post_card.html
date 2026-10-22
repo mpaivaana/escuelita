@@ -1,0 +1,9 @@
+<article class="post-card" data-reveal style="--d: {{ delay|default(0) }}ms">
+  <a class="post-card-media" href="{{ url_for('blog_post', lang=lang, slug=p.slug) }}" tabindex="-1" aria-hidden="true">
+    {% if p.cover %}<img src="{{ p.cover }}" alt="" loading="lazy">{% endif %}
+  </a>
+  <time class="post-date" datetime="{{ p.published_at }}">{{ p.published_at|pretty_date(lang) }}</time>
+  <h2 class="post-card-title"><a href="{{ url_for('blog_post', lang=lang, slug=p.slug) }}">{{ p.title }}</a></h2>
+  {% if p.excerpt %}<p class="post-card-excerpt">{{ p.excerpt }}</p>{% endif %}
+  <span class="post-card-more" aria-hidden="true">{{ ui.read_more }} {{ icon('arrow', 16) }}</span>
+</article>

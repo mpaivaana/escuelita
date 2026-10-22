@@ -31,10 +31,15 @@
   <div class="wrap">
     <div class="about-intro">
       <p class="lead" data-split>{{ s.about_text }}</p>
-      {# Vídeo institucional: por enquanto um espaço reservado; trocar pelo <video>/<iframe> quando chegar #}
-      <div class="about-video" data-reveal role="img" aria-label="{{ ui.video_soon }}">
-        <span class="about-video-play">{{ icon('play', 30) }}</span>
-        <span class="about-video-label">{{ ui.video_soon }}</span>
+      {# Vídeo institucional (narrado em espanhol). Sem JS, o player nativo aparece direto. #}
+      <div class="about-video" data-reveal data-video>
+        <video src="{{ url_for('static', filename='video/la-escuelita-intro-es.mp4') }}"
+               poster="{{ url_for('static', filename='video/la-escuelita-intro-poster.jpg') }}"
+               preload="none" playsinline controls aria-label="{{ ui.watch_video }}"></video>
+        <button class="about-video-cover" type="button">
+          <span class="about-video-play">{{ icon('play', 30) }}</span>
+          <span class="about-video-label">{{ ui.watch_video }}</span>
+        </button>
       </div>
     </div>
     {% if c.pillars %}

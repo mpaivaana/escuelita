@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} · La Escuelita Ambiental Móvil{% endblock %}
+{% block description %}{{ post.excerpt or ui.blog_intro }}{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_image %}{% if post.cover %}{{ post.cover if post.cover.startswith('http') else request.url_root.rstrip('/') ~ post.cover }}{% else %}{{ super() }}{% endif %}{% endblock %}
+{% block content %}
+<article class="post">
+  <header class="section blog-top page-top post-head">
+    <div class="wrap post-wrap">
+      <a class="link-arrow link-back" href="{{ url_for('blog', lang=lang) }}">{{ icon('arrow', 18) }}<span>{{ ui.back_to_blog }}</span></a>
+      <p class="post-meta">
+        <time datetime="{{ post.published_at }}">{{ post.published_at|pretty_date(lang) }}</time>
+        {% if post.author %}<span aria-hidden="true">·</span> <span>{{ ui.by_author.format(author=post.author) }}</span>{% endif %}
+      </p>
+      <h1>{{ post.title }}</h1>
+      {% if post.excerpt %}<p class="post-excerpt">{{ post.excerpt }}</p>{% endif %}
+    </div>
+  </header>
+  <div class="section post-body-section">
+    <div class="wrap post-wrap">
+      {% if post.cover %}<img class="post-cover" src="{{ post.cover }}" alt="">{% endif %}
+      <div class="prose">{{ post.body|markdown }}</div>
+      <a class="link-arrow link-back post-foot" href="{{ url_for('blog', lang=lang) }}">{{ icon('arrow', 18) }}<span>{{ ui.back_to_blog }}</span></a>
+    </div>
+  </div>
+</article>
+{% endblock %}
