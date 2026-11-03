@@ -11,7 +11,7 @@ from markupsafe import Markup
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _content import get_blog, get_content, get_post, is_degraded, send_contact  # noqa: E402
+from _content import error_of, fallback_warning, get_blog, get_content, get_post, is_degraded, send_contact  # noqa: E402
 from _i18n import LANG_NAMES, LANGS, MONTHS, PROJECTS_SLUG, UI, pick_lang  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -89,11 +89,16 @@ def pretty_date(value, lang="es"):
     return f"{month} {d.day}, {d.year}" if lang == "en" else f"{d.day} de {month} de {d.year}"
 
 
-def cached(html, source="cms", degraded=False):
+def cached(html, source="cms", degraded=False, error=""):
     """Resposta cacheável pelo CDN. Se o CMS não respondeu (conteúdo de contingência), o cache é curto:
     assim uma queda passageira do backend não fica "congelada" no site por vários minutos."""
     resp = app.make_response(html)
     resp.headers["X-Content-Source"] = "degraded" if degraded else source
+    if degraded and error:
+        resp.headers["X-Content-Error"] = error  # motivo da falha do CMS (visível em DevTools > Rede)
+    warning = fallback_warning()
+    if warning:  # funcionando só por causa da reserva: avisa para o erro de configuração não ficar escondido
+        resp.headers["X-Content-Warning"] = warning
     resp.headers["Cache-Control"] = ("public, s-maxage=10, stale-while-revalidate=30" if degraded
                                      else "public, s-maxage=60, stale-while-revalidate=600")
     return resp
@@ -141,7 +146,7 @@ def home(lang):
     content = get_content(lang)
     status = request.args.get("contacto")
     html = render_template("index.html", c=content, form_status=status, **page_context(lang, "home"))
-    return html if status else cached(html, content.get("source", "cms"), is_degraded(content))
+    return html if status else cached(html, content.get("source", "cms"), is_degraded(content), error_of(content))
 
 
 @app.get("/<lang>/<slug>/")
@@ -150,7 +155,7 @@ def projects(lang, slug):
         abort(404)
     content = get_content(lang)
     return cached(render_template("projects.html", c=content, **page_context(lang, "projects")),
-                  content.get("source", "cms"), is_degraded(content))
+                  content.get("source", "cms"), is_degraded(content), error_of(content))
 
 
 @app.get("/<lang>/blog/")
@@ -159,7 +164,7 @@ def blog(lang):
         abort(404)
     posts = get_blog(lang)
     return cached(render_template("blog.html", posts=posts, active_nav="blog", **page_context(lang, "blog")),
-                  degraded=is_degraded(posts))
+                  degraded=is_degraded(posts), error=error_of(posts))
 
 
 @app.get("/<lang>/blog/<slug>/")
