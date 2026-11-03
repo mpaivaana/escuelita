@@ -7,8 +7,13 @@
   <title>{% block title %}La Escuelita Ambiental Móvil{% endblock %}</title>
   <meta name="description" content="{% block description %}{{ ui.meta_description }}{% endblock %}">
   <meta name="theme-color" content="#145a3c">
-  {% for code in langs %}<link rel="alternate" hreflang="{{ code }}" href="{{ lang_urls[code] }}">
-  {% endfor %}
+  {% block canonical %}<link rel="canonical" href="{{ lang_urls_abs[lang] }}">
+  <meta property="og:url" content="{{ lang_urls_abs[lang] }}">
+  {% for code in langs %}<link rel="alternate" hreflang="{{ code }}" href="{{ lang_urls_abs[code] }}">
+  {% endfor %}<link rel="alternate" hreflang="x-default" href="{{ lang_urls_abs['es'] }}">{% endblock %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="La Escuelita Ambiental Móvil">
+  <meta name="twitter:card" content="summary_large_image">
   <meta property="og:title" content="{% block og_title %}La Escuelita Ambiental Móvil{% endblock %}">
   <meta property="og:description" content="{{ self.description() }}">
   <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='img/pizarra.jpg', _external=True) }}{% endblock %}">

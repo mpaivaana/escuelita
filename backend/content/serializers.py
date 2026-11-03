@@ -79,6 +79,7 @@ class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
         fields = ("name", "email", "subject", "message", "language", "website")
+        extra_kwargs = {"message": {"max_length": 5000}}
 
     def validate_language(self, value):
         return value if value in {"es", "en", "pt"} else "es"

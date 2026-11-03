@@ -71,18 +71,29 @@
 
   /* Contadores ----------------------------------------------------------- */
   const animateCount = (el) => {
-    const raw = el.dataset.counter || el.textContent;
-    const digits = raw.replace(/\D/g, "");
-    if (!digits || reduced) return;
-    const end = parseInt(digits, 10);
-    const [before, after] = raw.split(digits);
+    const raw = (el.dataset.counter || el.textContent).trim();
+    // Primeiro número do texto, aceitando separadores de milhar/decimal: "+1.200", "1,500", "2.5M", "3,5 mil"
+    const match = raw.match(/\d[\d.,]*/);
+    if (!match || reduced) return;
+    const number = match[0];
+    const before = raw.slice(0, match.index);
+    const after = raw.slice(match.index + number.length);
+    // Decimal = "." ou "," seguido de 1-2 dígitos no fim do número ("2.5M", "3,5 mil"); o resto são milhares
+    const keepAsTyped = /[.,]\d{1,2}$/.test(number);
+    const decimals = keepAsTyped ? number.length - 1 - Math.max(number.lastIndexOf("."), number.lastIndexOf(",")) : 0;
+    const end = parseInt(number.replace(/\D/g, ""), 10) / 10 ** decimals;
     const duration = 1600;
     const start = performance.now();
     const step = (now) => {
       const p = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = before + Math.round(end * eased).toLocaleString(root.lang || "es") + after;
-      if (p < 1) requestAnimationFrame(step);
+      if (p < 1) {
+        const value = end * eased;
+        el.textContent = before + (keepAsTyped ? value.toFixed(decimals) : Math.round(value).toLocaleString(root.lang || "es")) + after;
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = raw; // termina sempre exatamente como o editor escreveu no CMS
+      }
     };
     requestAnimationFrame(step);
   };
