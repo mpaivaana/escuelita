@@ -6,6 +6,8 @@ from io import StringIO
 from django.contrib.auth.models import Group, User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
+from unittest import mock
+
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
@@ -157,3 +159,54 @@ class SeedTests(TestCase):
         TeamMember.objects.all().delete()
         self.run_seed("--team")
         self.assertEqual(TeamMember.objects.count(), 4)
+
+
+@override_settings(DEBUG=True)  # o runner força DEBUG=False; aqui simulamos um ambiente de desenvolvimento saudável
+class CheckIntegrationsTests(SeededTestCase):
+    def run_check(self, *args):
+        out = StringIO()
+        try:
+            call_command("check_integrations", *args, stdout=out)
+            code = 0
+        except SystemExit as exc:
+            code = exc.code
+        return code, out.getvalue()
+
+    def test_fails_without_an_admin_and_passes_with_one(self):
+        code, out = self.run_check()
+        self.assertEqual(code, 1)
+        self.assertIn("administradores ativos: 0", out)
+        User.objects.create_superuser("root", "r@x.com", "Pass12345!")
+        code, out = self.run_check()
+        self.assertEqual(code, 0, out)
+        self.assertIn("nada foi gravado", out)
+        self.assertFalse(ContactMessage.objects.exists())  # o teste de escrita é revertido
+
+    def test_detects_broken_image_references(self):
+        User.objects.create_superuser("root", "r@x.com", "Pass12345!")
+        from .models import Project
+        Project.objects.filter(pk=Project.objects.first().pk).update(image="projects/sumiu.png")
+        code, out = self.run_check("--check-urls")
+        self.assertEqual(code, 1)
+        self.assertIn("imagem quebrada", out)
+
+    @override_settings(USE_CLOUDINARY=False, DEBUG=False)
+    def test_ephemeral_disk_storage_is_a_failure_in_production(self):
+        User.objects.create_superuser("root", "r@x.com", "Pass12345!")
+        code, out = self.run_check()
+        self.assertEqual(code, 1)
+        self.assertIn("SE PERDEM a cada deploy", out)
+
+    @override_settings(USE_CLOUDINARY=True)
+    def test_cloudinary_path_pings_and_upload_test_is_cleaned_up(self):
+        User.objects.create_superuser("root", "r@x.com", "Pass12345!")
+        with mock.patch("cloudinary.api.ping", return_value={"status": "ok"}) as ping, \
+                mock.patch("content.management.commands.check_integrations.http_status", return_value=(200, {})), \
+                mock.patch("content.management.commands.check_integrations.default_storage") as storage:
+            storage.save.return_value = "healthcheck/integration-test"
+            storage.url.return_value = "https://res.cloudinary.com/x/image/upload/v1/healthcheck/integration-test"
+            code, out = self.run_check("--write-test")
+        ping.assert_called_once()
+        storage.delete.assert_called_once_with("healthcheck/integration-test")
+        self.assertIn("URL pública responde 200", out)
+        self.assertEqual(code, 0, out)

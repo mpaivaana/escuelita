@@ -11,7 +11,7 @@ from markupsafe import Markup
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _content import get_blog, get_content, get_post, send_contact  # noqa: E402
+from _content import get_blog, get_content, get_post, is_degraded, send_contact  # noqa: E402
 from _i18n import LANG_NAMES, LANGS, MONTHS, PROJECTS_SLUG, UI, pick_lang  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -59,14 +59,18 @@ def page_context(lang, endpoint, **extra):
 HTML_BLOCK = re.compile(r"<(div|p|h[1-6]|ul|ol|blockquote|pre)\b", re.I)
 
 
+H1_TAG = re.compile(r"<(/?)h1\b", re.I)
+
+
 @app.template_filter("markdown")
 def render_markdown(text):
     """Corpo das entradas do blog. O editor visual do CMS manda HTML (já limpo no backend);
-    textos antigos ou de exemplo em Markdown são convertidos aqui."""
+    textos antigos ou de exemplo em Markdown são convertidos aqui.
+    O título do post já é o <h1> da página; o botão de título do editor também gera <h1>, então
+    os do corpo viram <h2> (o CSS de .prose trata os dois igual: sem mudança visual)."""
     text = text or ""
-    if HTML_BLOCK.search(text):
-        return Markup(text)
-    return Markup(markdown.markdown(text, extensions=["sane_lists"], output_format="html"))
+    html = text if HTML_BLOCK.search(text) else markdown.markdown(text, extensions=["sane_lists"], output_format="html")
+    return Markup(H1_TAG.sub(r"<\1h2", html))
 
 
 @app.template_filter("digits")
@@ -85,9 +89,13 @@ def pretty_date(value, lang="es"):
     return f"{month} {d.day}, {d.year}" if lang == "en" else f"{d.day} de {month} de {d.year}"
 
 
-def cached(html):
+def cached(html, source="cms", degraded=False):
+    """Resposta cacheável pelo CDN. Se o CMS não respondeu (conteúdo de contingência), o cache é curto:
+    assim uma queda passageira do backend não fica "congelada" no site por vários minutos."""
     resp = app.make_response(html)
-    resp.headers["Cache-Control"] = "public, s-maxage=60, stale-while-revalidate=600"
+    resp.headers["X-Content-Source"] = "degraded" if degraded else source
+    resp.headers["Cache-Control"] = ("public, s-maxage=10, stale-while-revalidate=30" if degraded
+                                     else "public, s-maxage=60, stale-while-revalidate=600")
     return resp
 
 
@@ -133,7 +141,7 @@ def home(lang):
     content = get_content(lang)
     status = request.args.get("contacto")
     html = render_template("index.html", c=content, form_status=status, **page_context(lang, "home"))
-    return html if status else cached(html)
+    return html if status else cached(html, content.get("source", "cms"), is_degraded(content))
 
 
 @app.get("/<lang>/<slug>/")
@@ -141,7 +149,8 @@ def projects(lang, slug):
     if lang not in LANGS or slug != PROJECTS_SLUG[lang]:
         abort(404)
     content = get_content(lang)
-    return cached(render_template("projects.html", c=content, **page_context(lang, "projects")))
+    return cached(render_template("projects.html", c=content, **page_context(lang, "projects")),
+                  content.get("source", "cms"), is_degraded(content))
 
 
 @app.get("/<lang>/blog/")
@@ -149,7 +158,8 @@ def blog(lang):
     if lang not in LANGS:
         abort(404)
     posts = get_blog(lang)
-    return cached(render_template("blog.html", posts=posts, active_nav="blog", **page_context(lang, "blog")))
+    return cached(render_template("blog.html", posts=posts, active_nav="blog", **page_context(lang, "blog")),
+                  degraded=is_degraded(posts))
 
 
 @app.get("/<lang>/blog/<slug>/")

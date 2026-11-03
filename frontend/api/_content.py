@@ -12,6 +12,17 @@ SEED_FILE = Path(__file__).resolve().parent.parent / "content" / "seed_content.j
 _cache: dict[str, tuple[float, dict]] = {}
 
 
+class Degraded(list):
+    """Lista vazia devolvida quando o CMS não respondeu (para o front não cachear isso por muito tempo)."""
+
+
+def is_degraded(obj) -> bool:
+    """True se a página foi montada com o conteúdo de exemplo/vazio porque o CMS configurado não respondeu."""
+    if isinstance(obj, Degraded):
+        return True
+    return bool(API_URL) and isinstance(obj, dict) and obj.get("source") == "seed"
+
+
 def _t(value, lang):
     if isinstance(value, dict):
         return value.get(lang) or value.get("es") or ""
@@ -41,6 +52,7 @@ def seed_content(lang: str) -> dict:
                     initials="".join(w[0] for w in (words[:1] + words[-1:] if len(words) > 1 else words)).upper())
         team.append(item)
     return {
+        "source": "seed",
         "lang": lang,
         "site": site,
         "pillars": [_localize(p, lang) for p in raw["pillars"]],
@@ -63,6 +75,7 @@ def get_content(lang: str) -> dict:
         data = resp.json()
         if not data.get("site"):
             raise ValueError("CMS vazio")
+        data["source"] = "cms"
     except Exception:
         # Neon/Railway podem estar "acordando": usa o último cache ou o seed
         return hit[1] if hit else seed_content(lang)
@@ -93,7 +106,7 @@ def get_blog(lang: str) -> list[dict]:
         resp.raise_for_status()
         posts = resp.json().get("posts", [])
     except Exception:
-        return hit[1] if hit else []  # nunca mostra exemplos falsos em produção
+        return hit[1] if hit else Degraded()  # nunca mostra exemplos falsos em produção
     _cache[key] = (time.time(), posts)
     return posts
 
