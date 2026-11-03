@@ -19,6 +19,10 @@ def env_list(name, default=""):
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-only-insecure-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
+if not DEBUG and SECRET_KEY == "dev-only-insecure-key":
+    print("AVISO: DJANGO_SECRET_KEY não definida; usando a chave de desenvolvimento. "
+          "Defina uma chave longa e aleatória nas variáveis da Railway (sessões e links do gestor dependem dela).",
+          file=sys.stderr)
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.up.railway.app")
 # O healthcheck da Railway chega com este host; sem ele o deploy nunca fica ativo
 ALLOWED_HOSTS += ["healthcheck.railway.app"]

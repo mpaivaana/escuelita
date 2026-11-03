@@ -1,3 +1,5 @@
+import hmac
+
 from django.conf import settings
 from django.utils import translation
 from rest_framework import status
@@ -81,7 +83,7 @@ class ContactView(APIView):
 
     def post(self, request):
         key = settings.CONTACT_API_KEY
-        if key and request.headers.get("X-Contact-Key") != key:
+        if key and not hmac.compare_digest(request.headers.get("X-Contact-Key", ""), key):
             return Response({"detail": "forbidden"}, status=status.HTTP_403_FORBIDDEN)
         serializer = ContactMessageSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

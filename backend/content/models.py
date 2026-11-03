@@ -61,6 +61,12 @@ class SiteSettings(models.Model):
         if not self.pk and SiteSettings.objects.exists():
             raise ValidationError("Ya existe una configuración. Edita la existente.")
 
+    def save(self, *args, **kwargs):
+        # Acepta "@usuario" o la URL pegada completa; guarda solo el usuario
+        handle = (self.instagram or "").strip().rstrip("/")
+        self.instagram = handle.split("instagram.com/")[-1].split("?")[0].lstrip("@").strip("/")
+        super().save(*args, **kwargs)
+
     @classmethod
     def load(cls):
         return cls.objects.first()

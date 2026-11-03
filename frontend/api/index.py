@@ -6,8 +6,9 @@ from pathlib import Path
 from urllib.parse import parse_qsl, urlencode
 
 import markdown
-from flask import Flask, abort, redirect, render_template, request, send_from_directory, url_for
+from flask import Flask, Response, abort, redirect, render_template, request, url_for
 from markupsafe import Markup
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _content import get_blog, get_content, get_post, send_contact  # noqa: E402
@@ -35,15 +36,23 @@ class RestoreVercelPath:
         return self.wsgi_app(environ, start_response)
 
 
-app.wsgi_app = RestoreVercelPath(app.wsgi_app)
+# Atrás da Vercel o esquema (https) e o host reais chegam em X-Forwarded-*; sem isso os links absolutos saem como http://
+app.wsgi_app = RestoreVercelPath(ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1))
+
+
+def _lang_urls(endpoint, external=False, **extra):
+    if endpoint == "projects":
+        return {code: url_for("projects", lang=code, slug=PROJECTS_SLUG[code], _external=external) for code in LANGS}
+    return {code: url_for(endpoint, lang=code, _external=external, **extra) for code in LANGS}
 
 
 def page_context(lang, endpoint, **extra):
     return {
         "lang": lang, "ui": UI[lang], "langs": LANGS, "lang_names": LANG_NAMES,
         "projects_slug": PROJECTS_SLUG[lang], "year": date.today().year,
-        "lang_urls": {code: url_for(endpoint, lang=code, **extra) for code in LANGS}
-        if endpoint != "projects" else {code: url_for("projects", lang=code, slug=PROJECTS_SLUG[code]) for code in LANGS},
+        "lang_urls": _lang_urls(endpoint, **extra),
+        # Absolutas: o hreflang e o canonical exigem URL completa
+        "lang_urls_abs": _lang_urls(endpoint, external=True, **extra),
     }
 
 
@@ -60,6 +69,12 @@ def render_markdown(text):
     return Markup(markdown.markdown(text, extensions=["sane_lists"], output_format="html"))
 
 
+@app.template_filter("digits")
+def only_digits(value):
+    """+51 (999) 999-999 -> 51999999999 (formato que o wa.me exige)."""
+    return re.sub(r"\D", "", str(value or ""))
+
+
 @app.template_filter("pretty_date")
 def pretty_date(value, lang="es"):
     try:
@@ -72,14 +87,38 @@ def pretty_date(value, lang="es"):
 
 def cached(html):
     resp = app.make_response(html)
-    resp.headers["Cache-Control"] = "public, s-maxage=300, stale-while-revalidate=86400"
+    resp.headers["Cache-Control"] = "public, s-maxage=60, stale-while-revalidate=600"
     return resp
 
 
 @app.get("/favicon.ico")
 def favicon():
-    # Navegadores pedem /favicon.ico na raiz mesmo com o <link rel="icon"> no HTML
-    return send_from_directory(Path(app.static_folder) / "img", "favicon.ico", max_age=604800)
+    # Navegadores pedem /favicon.ico na raiz. O arquivo vive em /static/ (CDN da Vercel); a função
+    # serverless não empacota public/, então redirecionar é o que funciona em produção e em dev.
+    return redirect(url_for("static", filename="img/favicon.ico"), 301)
+
+
+@app.get("/robots.txt")
+def robots():
+    body = f"User-agent: *\nAllow: /\n\nSitemap: {url_for('sitemap', _external=True)}\n"
+    return Response(body, mimetype="text/plain", headers={"Cache-Control": "public, max-age=86400"})
+
+
+@app.get("/sitemap.xml")
+def sitemap():
+    """Home, projetos, blog e cada entrada publicada, nos 3 idiomas, com os alternates de hreflang."""
+    def entry(urls):
+        alts = "".join(f'<xhtml:link rel="alternate" hreflang="{c}" href="{u}"/>' for c, u in urls.items())
+        return "".join(f"<url><loc>{u}</loc>{alts}</url>" for u in urls.values())
+
+    xml = ['<?xml version="1.0" encoding="UTF-8"?>',
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for endpoint in ("home", "projects", "blog"):
+        xml.append(entry(_lang_urls(endpoint, external=True)))
+    for post in get_blog("es"):  # o slug é o mesmo nos três idiomas
+        xml.append(entry(_lang_urls("blog_post", external=True, slug=post["slug"])))
+    xml.append("</urlset>")
+    return Response("".join(xml), mimetype="application/xml", headers={"Cache-Control": "public, max-age=3600"})
 
 
 @app.get("/")
@@ -124,10 +163,12 @@ def blog_post(lang, slug):
                                   **page_context(lang, "blog_post", slug=slug)))
 
 
-@app.post("/<lang>/contacto")
+@app.route("/<lang>/contacto", methods=["GET", "POST"], strict_slashes=False)
 def contact(lang):
     if lang not in LANGS:
         abort(404)
+    if request.method == "GET":  # alguém abriu o endereço do formulário direto
+        return redirect(url_for("home", lang=lang) + "#contacto", 302)
     form = request.form
     payload = {k: form.get(k, "").strip() for k in ("name", "email", "subject", "message", "website")}
     payload["language"] = lang

@@ -143,7 +143,7 @@
       {% if s.contact_intro %}<p>{{ s.contact_intro }}</p>{% endif %}
       <p class="contact-direct">{{ ui.contact_direct }}</p>
       <ul class="channels">
-        {% if s.whatsapp %}<li><a href="https://wa.me/{{ s.whatsapp|replace('+','')|replace(' ','') }}" target="_blank" rel="noopener">{{ icon('whatsapp', 22) }} <span>{{ s.whatsapp }}</span></a></li>{% endif %}
+        {% if s.whatsapp %}<li><a href="https://wa.me/{{ s.whatsapp|digits }}" target="_blank" rel="noopener">{{ icon('whatsapp', 22) }} <span>{{ s.whatsapp }}</span></a></li>{% endif %}
         {% if s.email %}<li><a href="mailto:{{ s.email }}">{{ icon('mail', 22) }} <span>{{ s.email }}</span></a></li>{% endif %}
         {% if s.instagram %}<li><a href="https://instagram.com/{{ s.instagram }}" target="_blank" rel="noopener">{{ icon('instagram', 22) }} <span>@{{ s.instagram }}</span></a></li>{% endif %}
       </ul>

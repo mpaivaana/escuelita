@@ -98,11 +98,12 @@ class SiteSettingsAdmin(BaseAdmin):
         "team_title": "Título de Equipo", "team_intro": "Introducción de Equipo",
         "contact_intro": "Texto de Contacto (sobre el formulario)",
         "hero_image": "Fondo de la portada (opcional)", "impact_number": "Cifra principal (ej. +1000)",
+        "tagline": "Frase bajo el logo de la portada (opcional)",
     }
     fieldsets = lang_tabs(
         "about_text", "impact_label", "projects_title", "projects_intro",
         "services_title", "services_intro", "team_title", "team_intro", "contact_intro",
-    ) + tab("Portada, cifra y contacto", "hero_image", "impact_number", "whatsapp", "email", "instagram")
+    ) + tab("Portada, cifra y contacto", "tagline", "hero_image", "impact_number", "whatsapp", "email", "instagram")
 
     def has_add_permission(self, request):
         return not SiteSettings.objects.exists()

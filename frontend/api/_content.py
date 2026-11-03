@@ -7,7 +7,7 @@ from pathlib import Path
 import requests
 
 API_URL = os.getenv("API_URL", "").rstrip("/")
-TTL = int(os.getenv("CONTENT_TTL", "300"))
+TTL = int(os.getenv("CONTENT_TTL", "60"))
 SEED_FILE = Path(__file__).resolve().parent.parent / "content" / "seed_content.json"
 _cache: dict[str, tuple[float, dict]] = {}
 

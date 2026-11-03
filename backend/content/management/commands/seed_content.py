@@ -28,13 +28,16 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--images", help="Carpeta con las imágenes de proyectos y equipo")
         parser.add_argument("--force", action="store_true", help="Borra y vuelve a cargar todo")
+        parser.add_argument("--team", action="store_true",
+                            help="Solo para bases antiguas sin sección de equipo: la carga si no hay integrantes")
 
     def handle(self, *args, **opts):
         data = json.loads(SEED.read_text(encoding="utf-8"))
         img_dir = Path(opts["images"]) if opts.get("images") else None
         if SiteSettings.objects.exists() and not opts["force"]:
-            # Bases ya pobladas antes de existir la sección de equipo
-            if not TeamMember.objects.exists():
+            # Bases ya pobladas antes de existir la sección de equipo. Es opt-in: este comando corre en cada
+            # deploy y, si fuera automático, resucitaría al equipo que alguien borró a propósito en el gestor.
+            if opts["team"] and not TeamMember.objects.exists():
                 self.seed_team(data, img_dir)
                 self.stdout.write(self.style.SUCCESS("Sección de equipo cargada."))
             else:
