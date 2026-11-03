@@ -114,6 +114,13 @@ def main():
 
     print("\n== Integração Front <-> CMS")
     source = pages.get("/es/", (0, {}, ""))[1].get("X-Content-Source") if pages.get("/es/", (0,))[0] == 200 else None
+    if pages.get("/es/", (0,))[0] == 200:
+        reason = pages["/es/"][1].get("X-Content-Error")
+        warning = pages["/es/"][1].get("X-Content-Warning")
+        if warning:
+            say(WARN, f"o front só funciona por causa da reserva: {warning}. Corrija API_URL na Vercel")
+        if reason:
+            say(FAIL, f"motivo informado pelo front: {reason}")
     if source == "cms":
         say(OK, "o front lê o conteúdo do CMS (X-Content-Source: cms)")
     elif source in ("degraded", "seed"):

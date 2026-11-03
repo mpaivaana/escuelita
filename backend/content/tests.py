@@ -218,3 +218,15 @@ class CheckIntegrationsTests(SeededTestCase):
         storage.delete.assert_called_once_with("healthcheck/integration-test")
         self.assertIn("URL pública responde 200", out)
         self.assertEqual(code, 0, out)
+
+    def test_front_check_warns_on_fallback_and_fails_on_error(self):
+        User.objects.create_superuser("root", "r@x.com", "Pass12345!")
+        path = "content.management.commands.check_integrations.http_status"
+        with mock.patch(path, return_value=(200, {"X-Content-Source": "cms", "X-Content-Warning": "API_URL incorreta; usando https://x"})):
+            code, out = self.run_check("--front-url", "https://front.example")
+        self.assertEqual(code, 0, out)  # aviso não reprova
+        self.assertIn("só funciona por causa da reserva", out)
+        with mock.patch(path, return_value=(200, {"X-Content-Source": "degraded", "X-Content-Error": "https://x -> ConnectionError"})):
+            code, out = self.run_check("--front-url", "https://front.example")
+        self.assertEqual(code, 1)
+        self.assertIn("motivo informado pelo front", out)

@@ -194,6 +194,10 @@ class Command(BaseCommand):
             self.report(FAIL, f"o front está mostrando conteúdo de EXEMPLO ({source}): confira API_URL na Vercel e se o backend responde")
         else:
             self.report(WARN, "o front não informa a origem do conteúdo (versão anterior ao cabeçalho X-Content-Source)")
+        if headers.get("X-Content-Error"):
+            self.report(FAIL, f"motivo informado pelo front: {headers.get('X-Content-Error')}")
+        if headers.get("X-Content-Warning"):
+            self.report(WARN, f"o front só funciona por causa da reserva: {headers.get('X-Content-Warning')}. Corrija API_URL na Vercel")
         for lang in ("en", "pt"):
             st, _ = http_status(f"{front}/{lang}/", "GET")
             self.report(OK if st == 200 else FAIL, f"/{lang}/ responde {st}")
