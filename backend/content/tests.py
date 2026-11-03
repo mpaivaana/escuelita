@@ -1,5 +1,7 @@
 """Testes de regressão do CMS e da API pública. Rodar: python manage.py test"""
 import io
+import shutil
+import tempfile
 from datetime import timedelta
 from io import StringIO
 
@@ -134,6 +136,12 @@ class CmsTests(SeededTestCase):
             self.assertEqual(SiteSettings.load().instagram, "laescuelita", typed)
 
     def test_blog_post_with_cover_via_admin(self):
+        media = tempfile.mkdtemp()  # não deixa lixo na pasta media/ de desenvolvimento
+        self.addCleanup(shutil.rmtree, media, True)
+        with override_settings(MEDIA_ROOT=media):
+            self._create_post_with_cover()
+
+    def _create_post_with_cover(self):
         self.client.force_login(self.admin)
         r = self.client.post(reverse("admin:content_blogpost_add"), {
             "title_es": "Primer post", "title_en": "", "title_pt": "", "excerpt_es": "", "excerpt_en": "", "excerpt_pt": "",

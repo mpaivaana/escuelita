@@ -117,13 +117,18 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Nos testes não existe o manifest do collectstatic (só é gerado no build), então usa o storage simples.
+TESTING = "test" in sys.argv
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
         if USE_CLOUDINARY
         else "django.core.files.storage.FileSystemStorage"
     },
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        if TESTING else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    },
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
