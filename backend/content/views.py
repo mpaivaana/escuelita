@@ -8,10 +8,13 @@ from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from .models import BlogPost, ImpactStat, Pillar, Project, Service, SiteSettings, TeamMember
+from .notifications import notify_contact
 from .serializers import (BlogPostListSerializer, BlogPostSerializer, ContactMessageSerializer, ImageUrlMixin,
                           ImpactStatSerializer, PillarSerializer, ProjectSerializer, ServiceSerializer,
                           TeamMemberSerializer)
 
+# Curto: o front consulta a API a cada poucos segundos e as edições do gestor têm de aparecer logo.
+API_CACHE = "public, max-age=5"
 SUPPORTED = {"es", "en", "pt"}
 SITE_FIELDS = ("tagline", "about_title", "about_text", "projects_title", "projects_intro", "services_title",
                "services_intro", "impact_number", "impact_label", "team_title", "team_intro", "contact_title", "contact_intro",
@@ -46,7 +49,7 @@ class SiteContentView(ImageUrlMixin, APIView):
                 "team": TeamMemberSerializer(TeamMember.objects.filter(published=True), many=True, context=ctx).data,
             }
         response = Response(data)
-        response["Cache-Control"] = "public, max-age=60"
+        response["Cache-Control"] = API_CACHE
         return response
 
 
@@ -58,7 +61,7 @@ class BlogListView(APIView):
         with translation.override(lang):
             posts = BlogPostListSerializer(BlogPost.visible(), many=True, context={"request": request}).data
         response = Response({"lang": lang, "posts": posts})
-        response["Cache-Control"] = "public, max-age=60"
+        response["Cache-Control"] = API_CACHE
         return response
 
 
@@ -73,7 +76,7 @@ class BlogPostView(APIView):
         with translation.override(lang):
             data = BlogPostSerializer(post, context={"request": request}).data
         response = Response(data)
-        response["Cache-Control"] = "public, max-age=60"
+        response["Cache-Control"] = API_CACHE
         return response
 
 
@@ -89,7 +92,8 @@ class ContactView(APIView):
         serializer.is_valid(raise_exception=True)
         if serializer.validated_data.get("website"):  # robô preencheu o honeypot
             return Response({"ok": True}, status=status.HTTP_201_CREATED)
-        serializer.save()
+        message = serializer.save()
+        notify_contact(message)  # falha no e-mail não impede o 201: a mensagem já está no gestor
         return Response({"ok": True}, status=status.HTTP_201_CREATED)
 
 

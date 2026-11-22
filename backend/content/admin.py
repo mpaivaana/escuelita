@@ -3,6 +3,7 @@
 Os campos traduzíveis aparecem em abas por idioma; o resto fica abaixo, comum aos três.
 """
 import re
+from urllib.parse import quote
 
 from django import forms
 from django.contrib import admin, messages
@@ -209,16 +210,30 @@ class BlogPostAdmin(BaseAdmin):
 # --- Mensajes del formulario ----------------------------------------------------------
 @admin.register(ContactMessage)
 class ContactMessageAdmin(ModelAdmin):
-    list_display = ("name", "subject", "email", "created_at", "state")
+    list_display = ("name", "subject", "message_preview", "email", "created_at", "state")
+    list_display_links = ("name", "subject", "message_preview")  # clicar em qualquer um abre a mensagem completa
     list_filter = ("handled", "language")
     list_filter_submit = True
     search_fields = ("name", "email", "subject", "message")
-    readonly_fields = ("name", "email", "subject", "message", "language", "created_at")
-    fields = ("name", "email", "subject", "message", "language", "created_at", "handled")
+    readonly_fields = ("name", "email", "subject", "message", "language", "created_at", "reply_link")
+    fields = ("name", "email", "subject", "message", "language", "created_at", "reply_link", "handled")
     actions = ("mark_handled",)
 
     def has_add_permission(self, request):
         return False
+
+    @display(description="Mensaje")
+    def message_preview(self, obj):
+        text = " ".join(obj.message.split())
+        return text if len(text) <= 70 else text[:70].rstrip() + "…"
+
+    @display(description="Responder")
+    def reply_link(self, obj):
+        if not obj.pk:
+            return "—"
+        subject = quote(f"Re: {' '.join(obj.subject.split())}")
+        return format_html('<a href="mailto:{}?subject={}" class="text-primary-600 underline">Responder por correo a {}</a>',
+                           quote(obj.email, safe="@"), subject, obj.email)
 
     @display(description="Estado", label={"Respondido": "success", "Nuevo": "danger"})
     def state(self, obj):
@@ -226,7 +241,8 @@ class ContactMessageAdmin(ModelAdmin):
 
     @action(description="Marcar como respondido", icon="done_all")
     def mark_handled(self, request, queryset):
-        queryset.update(handled=True)
+        n = queryset.update(handled=True)
+        messages.success(request, f"{n} mensaje(s) marcado(s) como respondido(s).")
 
 
 # --- Usuarios y roles -------------------------------------------------------------------

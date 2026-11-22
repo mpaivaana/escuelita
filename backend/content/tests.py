@@ -7,6 +7,7 @@ from io import StringIO
 
 from django.contrib.auth.models import Group, User
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core import mail
 from django.core.management import call_command
 from unittest import mock
 
@@ -50,6 +51,10 @@ class PublicApiTests(SeededTestCase):
 
     def test_health(self):
         self.assertEqual(self.client.get("/api/health/").json(), {"status": "ok"})
+
+    def test_api_cache_is_short_so_cms_edits_show_up_quickly(self):
+        for path in ("/api/site/", "/api/blog/"):
+            self.assertEqual(self.client.get(path)["Cache-Control"], "public, max-age=5", path)
 
 
 class BlogTests(SeededTestCase):
@@ -95,6 +100,52 @@ class ContactTests(TestCase):
     def test_honeypot_is_silently_dropped(self):
         self.assertEqual(self.post({**GOOD, "website": "spam"}, **KEY).status_code, 201)
         self.assertEqual(ContactMessage.objects.count(), 0)
+
+    def test_no_email_is_sent_when_notification_is_not_configured(self):
+        self.assertEqual(self.post(**KEY).status_code, 201)
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_settings(CONTACT_NOTIFY_EMAIL=["escuelita@example.com"], EMAIL_HOST="smtp.example.com")
+    def test_new_message_is_emailed_with_reply_to_the_sender(self):
+        self.assertEqual(self.post({**GOOD, "subject": "Hola\nBcc: x@y.com"}, **KEY).status_code, 201)
+        (sent,) = mail.outbox
+        self.assertEqual(sent.to, ["escuelita@example.com"])
+        self.assertEqual(sent.reply_to, ["ana@example.com"])
+        self.assertIn("Mensaje", sent.body)
+        self.assertNotIn("\n", sent.subject)  # quebra de linha no assunto não vira cabeçalho extra
+
+    @override_settings(CONTACT_NOTIFY_EMAIL=["escuelita@example.com"], EMAIL_HOST="smtp.example.com")
+    def test_email_failure_does_not_lose_the_message(self):
+        with mock.patch("django.core.mail.EmailMessage.send", side_effect=OSError("smtp fora do ar")):
+            self.assertEqual(self.post(**KEY).status_code, 201)
+        self.assertEqual(ContactMessage.objects.count(), 1)  # continua salva e visível no gestor
+
+
+class ContactAdminTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_superuser("root", "r@example.com", "pw-forte-123")
+        self.client.force_login(self.admin)
+        self.msg = ContactMessage.objects.create(name="Ana", email="ana@example.com", subject="Taller",
+                                                 message="Quiero un taller para mi escuela. " * 10)
+
+    def test_list_shows_a_preview_and_links_to_the_full_message(self):
+        html = self.client.get(reverse("admin:content_contactmessage_changelist")).content.decode()
+        self.assertIn("Quiero un taller para mi escuela.", html)
+        self.assertIn("…", html)  # a prévia é cortada, a mensagem inteira fica na página da mensagem
+        self.assertIn(reverse("admin:content_contactmessage_change", args=[self.msg.pk]), html)
+
+    def test_detail_has_full_message_and_a_reply_link(self):
+        html = self.client.get(reverse("admin:content_contactmessage_change", args=[self.msg.pk])).content.decode()
+        self.assertIn(self.msg.message.strip(), html)
+        self.assertIn("mailto:ana@example.com?subject=Re%3A%20Taller", html)
+
+    def test_editor_can_read_and_mark_handled_but_not_delete(self):
+        editor = User.objects.create_user("ed", password="pw-forte-123", is_staff=True)
+        editor.groups.add(Group.objects.get(name="Editores"))
+        self.client.force_login(editor)
+        url = reverse("admin:content_contactmessage_change", args=[self.msg.pk])
+        self.assertEqual(self.client.get(url).status_code, 200)
+        self.assertEqual(self.client.get(reverse("admin:content_contactmessage_delete", args=[self.msg.pk])).status_code, 403)
 
 
 class CmsTests(SeededTestCase):
