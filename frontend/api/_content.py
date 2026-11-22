@@ -18,7 +18,9 @@ log = logging.getLogger("escuelita")
 # Endereço público do backend de produção. Só é usado como reserva, e só dentro da Vercel.
 DEFAULT_API_URL = "https://escuelita-production.up.railway.app"
 LOCAL_HOSTS = ("localhost", "127.0.0.1")
-TTL = int(os.getenv("CONTENT_TTL", "60"))
+# Segundos que o conteúdo do CMS fica na memória da função. Cada instância da Vercel tem a sua cópia,
+# então um valor alto faz recarregar a página mostrar versões diferentes. Mantenha baixo.
+TTL = int(os.getenv("CONTENT_TTL") or 5)  # vazia = padrão, em vez de derrubar o site
 SEED_FILE = Path(__file__).resolve().parent.parent / "content" / "seed_content.json"
 _cache: dict[str, tuple[float, dict]] = {}
 # Última sondagem de backend: (quando, base que respondeu ou None, motivo da falha)

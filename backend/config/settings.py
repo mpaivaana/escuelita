@@ -145,6 +145,18 @@ REST_FRAMEWORK = {
 
 CONTACT_API_KEY = os.getenv("CONTACT_API_KEY", "")
 
+# Aviso por e-mail das mensagens do formulário (opcional). Sem CONTACT_NOTIFY_EMAIL ou EMAIL_HOST, não envia nada.
+# Use um provedor SMTP (Resend, Brevo, Gmail com senha de app...). Algumas hospedagens bloqueiam SMTP em planos básicos.
+CONTACT_NOTIFY_EMAIL = env_list("CONTACT_NOTIFY_EMAIL")
+EMAIL_HOST = os.getenv("EMAIL_HOST", "").strip()
+EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 587)  # variável criada vazia = padrão, em vez de derrubar o backend
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "False").lower() == "true"  # porta 465
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true" and not EMAIL_USE_SSL  # o Django recusa os dois juntos
+EMAIL_TIMEOUT = 10  # o formulário espera o envio: melhor falhar rápido do que travar o visitante
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "").strip() or EMAIL_HOST_USER or "no-reply@localhost"
+
 # Endereço do gestor de conteúdo. Em produção use algo difícil de adivinhar, ex. "gestor-8f3k2q".
 ADMIN_PATH = os.getenv("ADMIN_PATH", "admin").strip("/") + "/"
 

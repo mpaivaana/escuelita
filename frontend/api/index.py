@@ -89,6 +89,13 @@ def pretty_date(value, lang="es"):
     return f"{month} {d.day}, {d.year}" if lang == "en" else f"{d.day} de {month} de {d.year}"
 
 
+# Cache do CDN da Vercel. Curto de propósito: edições no gestor precisam aparecer logo após recarregar.
+# Sem stale-while-revalidate no caso normal: com ele o CDN entregava a versão antiga na primeira visita
+# depois da edição (e só mostrava a nova na seguinte), o que parecia "a alteração não pegou".
+CACHE_FRESH = "public, s-maxage=5"
+CACHE_DEGRADED = "public, s-maxage=10, stale-while-revalidate=30"
+
+
 def cached(html, source="cms", degraded=False, error=""):
     """Resposta cacheável pelo CDN. Se o CMS não respondeu (conteúdo de contingência), o cache é curto:
     assim uma queda passageira do backend não fica "congelada" no site por vários minutos."""
@@ -99,8 +106,7 @@ def cached(html, source="cms", degraded=False, error=""):
     warning = fallback_warning()
     if warning:  # funcionando só por causa da reserva: avisa para o erro de configuração não ficar escondido
         resp.headers["X-Content-Warning"] = warning
-    resp.headers["Cache-Control"] = ("public, s-maxage=10, stale-while-revalidate=30" if degraded
-                                     else "public, s-maxage=60, stale-while-revalidate=600")
+    resp.headers["Cache-Control"] = CACHE_DEGRADED if degraded else CACHE_FRESH
     return resp
 
 

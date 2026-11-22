@@ -153,7 +153,9 @@ class HeaderTests(Base):
             r = self.client.get("/es/")
         self.assertEqual(r.headers["X-Content-Source"], "cms")
         self.assertNotIn("X-Content-Error", r.headers)
-        self.assertIn("s-maxage=60", r.headers["Cache-Control"])
+        self.assertIn("s-maxage=5", r.headers["Cache-Control"])
+        # sem stale-while-revalidate: ele fazia a primeira visita após uma edição ainda mostrar a versão antiga
+        self.assertNotIn("stale-while-revalidate", r.headers["Cache-Control"])
 
     def test_fallback_in_use_is_flagged_in_a_header(self):
         self.env(API_URL="https://escuelita-cms.up.railway.app", VERCEL="1")
